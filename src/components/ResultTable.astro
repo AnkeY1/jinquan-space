@@ -1,0 +1,11 @@
+---
+interface Props {
+  id: string;
+  label: string;
+}
+const { id, label } = Astro.props;
+---
+
+<div id={id} class="table-wrap" role="region" aria-label={label} tabindex="0">
+  <slot />
+</div>

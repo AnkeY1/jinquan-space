@@ -1,0 +1,89 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import ProjectVisual from '../../components/ProjectVisual.astro';
+import { withBase } from '../../lib/url';
+---
+
+<Layout title="实验室">
+  <div class="page">
+    <header class="page-header">
+      <span class="eyebrow">LAB / ROOM FOR CURIOSITY</span>
+      <h1>把“如果”变成可以观察。</h1>
+      <p>调一个参数，看一种关系。这些浏览器里的交互实验，用真实计算帮助理解抽象概念。</p>
+    </header>
+    <article class="lab-feature">
+      <ProjectVisual id="signal-studio" />
+      <div>
+        <span class="badge">数学合成 · 交互实验</span>
+        <h2>看见信号的另一面。</h2>
+        <p>
+          两路正弦，一点噪声，一组采样参数。在时域与幅度谱之间，观察频率、窗函数和混叠如何改变图形。
+        </p>
+        <div class="tag-list">
+          <span class="tag">FFT</span>
+          <span class="tag">时域 / 频域</span>
+          <span class="tag">确定性噪声</span>
+        </div>
+        <a class="button primary" href={withBase('/lab/signal-studio/')}>
+          进入信号实验室 <span aria-hidden="true">↗</span>
+        </a>
+      </div>
+    </article>
+    <p class="small muted lab-note">
+      教学与可视化演示，结果为数学合成序列。实验不读取你的文件，不模拟经过校准的硬件测量。
+    </p>
+  </div>
+</Layout>
+<style>
+  .lab-feature {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--surface);
+  }
+  .lab-feature > div:last-child {
+    padding: 40px;
+    border-left: 1px solid var(--border);
+  }
+  .lab-feature :global(.project-visual) {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-bottom: 0;
+  }
+  .lab-feature :global(svg) {
+    height: 290px;
+  }
+  h2 {
+    font-size: 29px;
+    margin: 20px 0 17px;
+  }
+  .lab-feature p {
+    font-size: 14px;
+    color: var(--muted);
+  }
+  .lab-feature .button {
+    margin-top: 28px;
+  }
+  .lab-note {
+    margin-top: 20px;
+  }
+  @media (max-width: 760px) {
+    .lab-feature {
+      grid-template-columns: 1fr;
+    }
+    .lab-feature > div:last-child {
+      padding: 25px;
+      border-left: 0;
+      border-top: 1px solid var(--border);
+    }
+    .lab-feature :global(svg) {
+      height: 210px;
+    }
+    h2 {
+      font-size: 25px;
+    }
+  }
+</style>

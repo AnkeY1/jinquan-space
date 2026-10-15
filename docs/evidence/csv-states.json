@@ -1,0 +1,77 @@
+{
+  "kind": "Synthetic CSV UI evidence",
+  "checkedAt": "2026-10-15T07:29:45.196Z",
+  "siteOwner": "喻锦权",
+  "privateData": false,
+  "nativeBrowserZoomExecuted": false,
+  "states": [
+    {
+      "state": "error",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "status": "第 2 行引号边界无效，无法可靠继续解析。请检查未闭合或未转义的双引号。",
+      "filename": "合成引号错误.csv · 19 bytes",
+      "overflow": false,
+      "pageWidth": 390,
+      "viewportWidth": 390,
+      "exportDisabled": true
+    },
+    {
+      "state": "partial",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "status": "部分完成：4 条结构有效记录，2 条问题，见问题记录。",
+      "filename": "合成缺失值测试.csv · 20 bytes",
+      "overflow": false,
+      "pageWidth": 390,
+      "viewportWidth": 390,
+      "exportDisabled": false
+    },
+    {
+      "state": "cancelled",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "status": "已取消。可以立即选择新文件或使用示例。",
+      "filename": "合成取消测试.csv · 830,067 bytes",
+      "overflow": false,
+      "pageWidth": 390,
+      "viewportWidth": 390,
+      "exportDisabled": true
+    },
+    {
+      "state": "longname",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "status": "处理完成：3 条记录，2 条曲线。",
+      "filename": "合成数据文件用于验证中文文件名换行与移动端布局合成数据文件用于验证中文文件名换行与移动端布局合成数据文件用于验证中文文件名换行与移动端布局合成数据文件用于验证中文文件名换行与移动端布局合成数据文件用于验证中文文件名换行与移动端布局.csv · 15 bytes",
+      "overflow": false,
+      "pageWidth": 390,
+      "viewportWidth": 390,
+      "exportDisabled": false
+    }
+  ],
+  "simulation": {
+    "label": "640 CSS px viewport rendered at deviceScaleFactor 2 (1280 physical screenshot pixels). A layout/reflow simulation, not native 200% browser zoom.",
+    "viewport": {
+      "width": 640,
+      "height": 500
+    },
+    "deviceScaleFactor": 2,
+    "screenshotPixels": {
+      "width": 1280,
+      "height": 1000
+    },
+    "nativeBrowserZoomExecuted": false,
+    "overflow": false,
+    "cssWidth": 640,
+    "devicePixelRatio": 2
+  }
+}

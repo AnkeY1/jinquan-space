@@ -1,0 +1,195 @@
+---
+import { render } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import { content } from '../../lib/content';
+import { withBase } from '../../lib/url';
+export async function getStaticPaths() {
+  const { articles } = await content();
+  return articles.map((article) => ({ params: { slug: article.data.slug }, props: { article } }));
+}
+const { article } = Astro.props;
+const a = article.data;
+const { Content, headings } = await render(article);
+const { projects } = await content();
+const related = projects.filter((p) => a.relatedProjectSlugs.includes(p.data.slug));
+const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
+---
+
+<Layout title={a.title} description={a.summary}>
+  <div class="page article-detail">
+    <div class="breadcrumbs">
+      <a href={withBase('/articles/')}>文章</a>
+      <span>/</span>
+      <span>功能说明</span>
+    </div>
+    <header class="article-header">
+      <span class="badge">本站功能说明 / 演示文章</span>
+      <h1>{a.title}</h1>
+      <p>{a.summary}</p>
+      <div class="article-meta">
+        <time datetime={a.publishedAt}>{a.publishedAt}</time>
+        <span>·</span>
+        {a.tags.map((tag: string) => (
+          <span>{tag}</span>
+        ))}
+      </div>
+    </header>
+    <div class="article-body">
+      <div>
+        <details class="mobile-toc">
+          <summary>本文目录</summary>
+          <nav aria-label="本文目录">
+            {toc.map((h) => (
+              <a href={`#${h.slug}`}>{h.text}</a>
+            ))}
+          </nav>
+        </details>
+        <div class="prose">
+          <Content />
+        </div>
+        <aside class="references">
+          <h2>参考资料</h2>
+          {a.references.map((r: { title: string; url: string }) => (
+            <a href={r.url} rel="noopener noreferrer">
+              {r.title} ↗
+            </a>
+          ))}
+        </aside>
+        <aside class="references">
+          <h2>相关项目</h2>
+          {related.map((p) => (
+            <a href={withBase(`/projects/${p.data.slug}/`)}>{p.data.title} ↗</a>
+          ))}
+        </aside>
+        <a class="text-link back-link" href={withBase('/articles/')}>
+          ← 返回文章列表
+        </a>
+      </div>
+      <aside class="desktop-toc">
+        <span class="eyebrow">ON THIS PAGE</span>
+        <nav aria-label="本文目录">
+          {toc.map((h) => (
+            <a href={`#${h.slug}`} class:list={[h.depth === 3 && 'level-3']}>
+              {h.text}
+            </a>
+          ))}
+        </nav>
+      </aside>
+    </div>
+  </div>
+</Layout>
+<style>
+  .article-detail {
+    max-width: 1100px;
+    margin: auto;
+  }
+  .article-header {
+    max-width: 760px;
+    margin-bottom: 46px;
+  }
+  .article-header h1 {
+    font-size: clamp(29px, 3.5vw, 40px);
+    margin: 20px 0;
+  }
+  .article-header > p {
+    font-size: 16px;
+    color: var(--muted);
+    line-height: 1.8;
+  }
+  .article-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 24px;
+  }
+  .article-meta time {
+    font-family: Consolas, monospace;
+  }
+  .article-body {
+    display: grid;
+    grid-template-columns: minmax(0, 760px) 210px;
+    gap: 55px;
+    align-items: start;
+  }
+  .desktop-toc {
+    position: sticky;
+    top: 110px;
+    border-left: 1px solid var(--border);
+    padding: 8px 0 8px 22px;
+  }
+  .desktop-toc nav {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 20px;
+  }
+  .desktop-toc a {
+    font-size: 12px;
+    color: var(--muted);
+    text-decoration: none;
+    line-height: 1.7;
+  }
+  .desktop-toc a:hover {
+    color: var(--accent);
+  }
+  .desktop-toc .level-3 {
+    padding-left: 12px;
+  }
+  .references {
+    margin-top: 35px;
+    border-top: 1px solid var(--border);
+    padding-top: 25px;
+  }
+  .references h2 {
+    font-size: 19px;
+  }
+  .references a {
+    display: block;
+    font-size: 14px;
+    margin: 10px 0;
+    overflow-wrap: anywhere;
+  }
+  .back-link {
+    margin-top: 35px;
+  }
+  .mobile-toc {
+    display: none;
+  }
+  @media (max-width: 960px) {
+    .article-body {
+      display: block;
+      max-width: 760px;
+      margin: auto;
+    }
+    .desktop-toc {
+      display: none;
+    }
+    .article-header {
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .mobile-toc {
+      display: block;
+      margin: 0 0 28px;
+      padding: 6px 17px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--surface);
+    }
+    .mobile-toc nav {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 10px 0 15px;
+    }
+    .mobile-toc a {
+      font-size: 14px;
+      text-decoration: none;
+    }
+    .article-header {
+      margin-bottom: 28px;
+    }
+  }
+</style>

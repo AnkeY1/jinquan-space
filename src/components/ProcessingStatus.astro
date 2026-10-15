@@ -1,0 +1,19 @@
+---
+interface Props {
+  id: string;
+  initial: string;
+  progressId?: string;
+  progressLabel?: string;
+}
+const { id, initial, progressId, progressLabel = '处理进度' } = Astro.props;
+---
+
+<p id={id} class="status" role="status" aria-live="polite" aria-atomic="true">
+  {initial}
+</p>
+{progressId && <progress id={progressId} hidden aria-label={progressLabel}></progress>}
+<style>
+  progress {
+    width: 100%;
+  }
+</style>

@@ -1,0 +1,10 @@
+---
+interface Props {
+  label?: string;
+}
+const { label = '导出当前结果' } = Astro.props;
+---
+
+<div class="button-row" role="group" aria-label={label}>
+  <slot />
+</div>

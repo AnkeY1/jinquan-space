@@ -1,0 +1,236 @@
+npm notice run ziheng-space@1.0.0 verify
+npm notice run node scripts/verify.mjs
+
+Verification: check
+npm notice run ziheng-space@1.0.0 check
+npm notice run astro check
+15:15:53 [content] Syncing content
+15:15:53 [content] Synced content
+15:15:53 [types] Generated 599ms
+15:15:53 [check] Getting diagnostics for Astro files in <WORKSPACE>\outputs\ziheng-space...
+Result (86 files): 
+- 0 errors
+- 0 warnings
+- 0 hints
+
+
+Verification: lint
+npm notice run ziheng-space@1.0.0 lint
+npm notice run eslint .
+
+Verification: format:check
+npm notice run ziheng-space@1.0.0 format:check
+npm notice run prettier --check .
+Checking formatting...
+All matched files use Prettier code style!
+
+Verification: test:unit
+npm notice run ziheng-space@1.0.0 test:unit
+npm notice run vitest run
+
+ RUN  v5.0.4 <WORKSPACE>/outputs/ziheng-space
+
+
+ Test Files  5 passed (5)
+      Tests  107 passed (107)
+   Start at  15:16:04
+   Duration  687ms (tests 83%, import 8%, transform 7%, worker 2%)
+
+
+Verification: build
+npm notice run ziheng-space@1.0.0 prebuild
+npm notice run node scripts/generate-notices.mjs
+Client license and NOTICE texts retained in public/third-party-notices.txt
+npm notice run ziheng-space@1.0.0 build
+npm notice run astro build
+15:16:07 [content] Syncing content
+15:16:07 [content] Synced content
+15:16:07 [types] Generated 545ms
+15:16:07 [build] output: "static"
+15:16:07 [build] mode: "static"
+15:16:07 [build] directory: <WORKSPACE>\outputs\ziheng-space\dist\
+15:16:07 [build] Collecting build info...
+15:16:07 [build] ✓ Completed in 591ms.
+15:16:07 [build] Building static entrypoints...
+15:16:07 [vite] ✓ built in 306ms
+15:16:08 [WARN] [vite] [plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+15:16:08 [vite] ✓ built in 322ms
+15:16:08 [build] Rearranging server assets...
+
+ generating static routes 
+15:16:08   ├─ /404.html (+11ms) 
+15:16:08   ├─ /about/index.html (+8ms) 
+15:16:08   ├─ /articles/local-first-tools/index.html (+6ms) 
+15:16:08   ├─ /articles/log-time-difference/index.html (+3ms) 
+15:16:08   ├─ /articles/sampling-and-spectrum/index.html (+5ms) 
+15:16:08   ├─ /articles/index.html (+8ms) 
+15:16:08   ├─ /lab/signal-studio/index.html (+10ms) 
+15:16:08   ├─ /lab/index.html (+5ms) 
+15:16:08   ├─ /privacy/index.html (+5ms) 
+15:16:08   ├─ /projects/log-analyzer/index.html (+5ms) 
+15:16:08   ├─ /projects/csv-plotter/index.html (+4ms) 
+15:16:08   ├─ /projects/signal-studio/index.html (+3ms) 
+15:16:08   ├─ /projects/index.html (+8ms) 
+15:16:08   ├─ /resume/index.html (+4ms) 
+15:16:08   ├─ /robots.txt (+3ms) 
+15:16:08   ├─ /search/index.html (+6ms) 
+15:16:08   ├─ /search-index.json (+4ms) 
+15:16:08   ├─ /tools/csv-plotter/index.html (+5ms) 
+15:16:08   ├─ /tools/log-analyzer/index.html (+5ms) 
+15:16:08   ├─ /tools/index.html (+4ms) 
+15:16:08   ├─ /index.html (+5ms) 
+15:16:08 ✓ Completed in 229ms.
+
+15:16:08 [build] ✓ Completed in 913ms.
+15:16:08 [build] 19 page(s) built in 1.51s
+15:16:08 [build] Complete!
+npm notice run ziheng-space@1.0.0 postbuild
+npm notice run node scripts/check-links.mjs && node scripts/check-bundle.mjs
+Links OK: 502 references, 19 HTML pages, base /
+┌─────────┬─────────────────────────────────────────────┬───────────┬────────────┬─────────────┬──────┐
+│ (index) │ route                                       │ jsGzipKiB │ cssGzipKiB │ jsBudgetKiB │ pass │
+├─────────┼─────────────────────────────────────────────┼───────────┼────────────┼─────────────┼──────┤
+│ 0       │ '404.html'                                  │ 0.77      │ 4.16       │ 90          │ true │
+│ 1       │ 'about/index.html'                          │ 0.77      │ 4.16       │ 90          │ true │
+│ 2       │ 'articles/index.html'                       │ 1.33      │ 4.16       │ 90          │ true │
+│ 3       │ 'articles/local-first-tools/index.html'     │ 0.77      │ 4.16       │ 90          │ true │
+│ 4       │ 'articles/log-time-difference/index.html'   │ 0.77      │ 4.16       │ 90          │ true │
+│ 5       │ 'articles/sampling-and-spectrum/index.html' │ 0.77      │ 4.16       │ 90          │ true │
+│ 6       │ 'index.html'                                │ 0.92      │ 5.9        │ 90          │ true │
+│ 7       │ 'lab/index.html'                            │ 0.77      │ 4.16       │ 90          │ true │
+│ 8       │ 'lab/signal-studio/index.html'              │ 208.52    │ 5.38       │ 450         │ true │
+│ 9       │ 'privacy/index.html'                        │ 0.77      │ 4.16       │ 90          │ true │
+│ 10      │ 'projects/csv-plotter/index.html'           │ 0.77      │ 4.16       │ 90          │ true │
+│ 11      │ 'projects/index.html'                       │ 1.33      │ 4.16       │ 90          │ true │
+│ 12      │ 'projects/log-analyzer/index.html'          │ 0.77      │ 4.16       │ 90          │ true │
+│ 13      │ 'projects/signal-studio/index.html'         │ 0.77      │ 4.16       │ 90          │ true │
+│ 14      │ 'resume/index.html'                         │ 0.8       │ 4.16       │ 90          │ true │
+│ 15      │ 'search/index.html'                         │ 2.14      │ 4.16       │ 90          │ true │
+│ 16      │ 'tools/csv-plotter/index.html'              │ 216.05    │ 4.16       │ 450         │ true │
+│ 17      │ 'tools/index.html'                          │ 0.77      │ 4.16       │ 90          │ true │
+│ 18      │ 'tools/log-analyzer/index.html'             │ 210.47    │ 5.59       │ 450         │ true │
+└─────────┴─────────────────────────────────────────────┴───────────┴────────────┴─────────────┴──────┘
+Static total 1.05 MiB; 39 files
+
+Verification: test:e2e
+npm notice run ziheng-space@1.0.0 test:e2e
+npm notice run playwright test tests/e2e
+[WebServer] (node:30500) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:2440) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 30 tests using 1 worker
+
+(node:29816) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 [chromium] › tests\e2e\csv.spec.ts:26:1 › CSV sample parses quoted multiline fields, null gaps, full statistics and real downloads (1.3s)
+  ok  2 [chromium] › tests\e2e\csv.spec.ts:59:1 › special headers stay text, duplicate columns stay distinct, fifth selection is rejected (806ms)
+  ok  3 [chromium] › tests\e2e\csv.spec.ts:81:1 › nonmonotonic and invalid X retain source order and each Y has independent missing values (767ms)
+  ok  4 [chromium] › tests\e2e\csv.spec.ts:102:1 › cancel then same file reselection, stale exports, parsing errors and size limit recover (2.0s)
+  ok  5 [chromium] › tests\e2e\csv.spec.ts:141:1 › file sentinels stay out of requests, URL and storage, formula text is protected in issue export (786ms)
+  ok  6 [chromium] › tests\e2e\csv.spec.ts:196:1 › loaded CSV tool still computes and exports after network is disabled (798ms)
+  ok  7 [chromium] › tests\e2e\lifecycle.spec.ts:2:1 › P-02 repeated log analysis releases workers and charts (1.9s)
+  ok  8 [chromium] › tests\e2e\log.spec.ts:29:1 › 双日志示例、正负超界、CSV 原值和真实 PNG (2.6s)
+  ok  9 [chromium] › tests\e2e\log.spec.ts:89:1 › 重号唯一配对、分段选择和旧结果保护 (939ms)
+  ok 10 [chromium] › tests\e2e\log.spec.ts:112:1 › 空文件、二进制、编码失败和无匹配均可恢复 (839ms)
+  ok 11 [chromium] › tests\e2e\log.spec.ts:150:1 › 日志中 HTML 仅作文本显示，候选错误产生断点 (705ms)
+  ok 12 [chromium] › tests\e2e\log.spec.ts:167:1 › 按所选 GB18030 严格解码，不自动猜测编码 (720ms)
+  ok 13 [chromium] › tests\e2e\log.spec.ts:186:1 › 取消后立即更换文件及相同文件重复选择 (896ms)
+  ok 14 [chromium] › tests\e2e\log.spec.ts:207:1 › 页面资源加载后断网仍可重新分析、取消和导出 (833ms)
+  ok 15 [chromium] › tests\e2e\log.spec.ts:220:1 › 跨年计算在亚洲和美洲浏览器时区一致 (1.4s)
+  ok 16 [chromium] › tests\e2e\log.spec.ts:233:1 › 10,000 条日志性能、分页和本地数据边界 (745ms)
+  ok 17 [chromium] › tests\e2e\signal.spec.ts:11:1 › E-DSP-01/02/03: real initial results, presets, validation and reset (1.1s)
+  ok 18 [chromium] › tests\e2e\signal.spec.ts:41:1 › E-DSP-04: bounded links, explicit sharing and browser history (1.7s)
+  ok 19 [chromium] › tests\e2e\signal.spec.ts:82:1 › E-DSP-05: full CSV exports and actual PNG bytes (1.5s)
+  ok 20 [chromium] › tests\e2e\signal.spec.ts:119:1 › E-THEME-02 / E-DSP-06: keyboard controls, range sync and zoom survive theme changes (1.4s)
+  ok 21 [chromium] › tests\e2e\signal.spec.ts:144:1 › E-DSP-07: mobile 320px remains usable without horizontal overflow (899ms)
+  ok 22 [chromium] › tests\e2e\signal.spec.ts:157:1 › loaded signal studio computes and exports after going offline (800ms)
+  ok 23 [chromium] › tests\e2e\signal.spec.ts:174:1 › signal rendered parameter response measurement (1.2s)
+  ok 24 [chromium] › tests\e2e\site.spec.ts:23:1 › E-NAV-01 E-404-01 all routes refresh and true404 (2.0s)
+  ok 25 [chromium] › tests\e2e\site.spec.ts:34:1 › E-NAV-02 A-02 mobile menu escape focus + skip and no overflow (487ms)
+  ok 26 [chromium] › tests\e2e\site.spec.ts:54:1 › E-THEME-01 three choices persistence and system follow (640ms)
+  ok 27 [chromium] › tests\e2e\site.spec.ts:76:1 › E-SEARCH-01..03 IME hash loading failure retry XSS (872ms)
+  ok 28 [chromium] › tests\e2e\site.spec.ts:102:1 › project/article filters back-forward URLs (491ms)
+  ok 29 [chromium] › tests\e2e\site.spec.ts:113:1 › article TOC copy exact code and resume print template (2.2s)
+  ok 30 [chromium] › tests\e2e\site.spec.ts:179:1 › E-NOJS-01 navigation/static article/tool explanations (644ms)
+
+  30 passed (39.8s)
+
+Verification: test:basepath
+npm notice run ziheng-space@1.0.0 test:basepath
+npm notice run node scripts/test-build.mjs base
+Static preview http://127.0.0.1:4175/portfolio/
+E-BASE-01: all routes, search, inline Workers, examples and download passed at /portfolio/
+
+Verification: test:public
+npm notice run ziheng-space@1.0.0 test:public
+npm notice run node scripts/test-build.mjs public
+E-PUBLIC-01: approval gate, clean rebuild, draft/preview filtering, canonical, noindex, sitemap and real profile unchanged passed
+U-CONTENT-03: invalid calendar date, slug and related project rejected
+
+Verification: test:a11y
+npm notice run ziheng-space@1.0.0 test:a11y
+npm notice run playwright test --project=chromium tests/accessibility
+[WebServer] (node:24024) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:31168) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 14 tests using 1 worker
+
+(node:26568) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 [chromium] › tests\accessibility\site.spec.ts:13:5 › A-01 light / (1.2s)
+  ok  2 [chromium] › tests\accessibility\site.spec.ts:13:5 › A-01 light /articles/log-time-difference/ (864ms)
+  ok  3 [chromium] › tests\accessibility\site.spec.ts:13:5 › A-01 light /tools/log-analyzer/ (1.4s)
+  ok  4 [chromium] › tests\accessibility\site.spec.ts:13:5 › A-01 light /tools/csv-plotter/ (1.3s)
+  ok  5 [chromium] › tests\accessibility\site.spec.ts:13:5 › A-01 light /lab/signal-studio/ (1.2s)
+  ok  6 [chromium] › tests\accessibility\site.spec.ts:13:5 › A-01 light /resume/ (765ms)
+  ok  7 [chromium] › tests\accessibility\site.spec.ts:13:5 › A-01 light /search/ (719ms)
+  ok  8 [chromium] › tests\accessibility\site.spec.ts:13:5 › A-01 dark / (1.0s)
+  ok  9 [chromium] › tests\accessibility\site.spec.ts:13:5 › A-01 dark /articles/log-time-difference/ (853ms)
+  ok 10 [chromium] › tests\accessibility\site.spec.ts:13:5 › A-01 dark /tools/log-analyzer/ (1.4s)
+  ok 11 [chromium] › tests\accessibility\site.spec.ts:13:5 › A-01 dark /tools/csv-plotter/ (1.3s)
+  ok 12 [chromium] › tests\accessibility\site.spec.ts:13:5 › A-01 dark /lab/signal-studio/ (1.2s)
+  ok 13 [chromium] › tests\accessibility\site.spec.ts:13:5 › A-01 dark /resume/ (743ms)
+  ok 14 [chromium] › tests\accessibility\site.spec.ts:13:5 › A-01 dark /search/ (740ms)
+
+  14 passed (20.1s)
+
+Verification: test:links
+npm notice run ziheng-space@1.0.0 test:links
+npm notice run node scripts/check-links.mjs
+Links OK: 502 references, 19 HTML pages, base /
+
+Verification: test:bundle
+npm notice run ziheng-space@1.0.0 test:bundle
+npm notice run node scripts/check-bundle.mjs
+┌─────────┬─────────────────────────────────────────────┬───────────┬────────────┬─────────────┬──────┐
+│ (index) │ route                                       │ jsGzipKiB │ cssGzipKiB │ jsBudgetKiB │ pass │
+├─────────┼─────────────────────────────────────────────┼───────────┼────────────┼─────────────┼──────┤
+│ 0       │ '404.html'                                  │ 0.77      │ 4.16       │ 90          │ true │
+│ 1       │ 'about/index.html'                          │ 0.77      │ 4.16       │ 90          │ true │
+│ 2       │ 'articles/index.html'                       │ 1.33      │ 4.16       │ 90          │ true │
+│ 3       │ 'articles/local-first-tools/index.html'     │ 0.77      │ 4.16       │ 90          │ true │
+│ 4       │ 'articles/log-time-difference/index.html'   │ 0.77      │ 4.16       │ 90          │ true │
+│ 5       │ 'articles/sampling-and-spectrum/index.html' │ 0.77      │ 4.16       │ 90          │ true │
+│ 6       │ 'index.html'                                │ 0.92      │ 5.9        │ 90          │ true │
+│ 7       │ 'lab/index.html'                            │ 0.77      │ 4.16       │ 90          │ true │
+│ 8       │ 'lab/signal-studio/index.html'              │ 208.52    │ 5.38       │ 450         │ true │
+│ 9       │ 'privacy/index.html'                        │ 0.77      │ 4.16       │ 90          │ true │
+│ 10      │ 'projects/csv-plotter/index.html'           │ 0.77      │ 4.16       │ 90          │ true │
+│ 11      │ 'projects/index.html'                       │ 1.33      │ 4.16       │ 90          │ true │
+│ 12      │ 'projects/log-analyzer/index.html'          │ 0.77      │ 4.16       │ 90          │ true │
+│ 13      │ 'projects/signal-studio/index.html'         │ 0.77      │ 4.16       │ 90          │ true │
+│ 14      │ 'resume/index.html'                         │ 0.8       │ 4.16       │ 90          │ true │
+│ 15      │ 'search/index.html'                         │ 2.14      │ 4.16       │ 90          │ true │
+│ 16      │ 'tools/csv-plotter/index.html'              │ 216.05    │ 4.16       │ 450         │ true │
+│ 17      │ 'tools/index.html'                          │ 0.77      │ 4.16       │ 90          │ true │
+│ 18      │ 'tools/log-analyzer/index.html'             │ 210.47    │ 5.59       │ 450         │ true │
+└─────────┴─────────────────────────────────────────────┴───────────┴────────────┴─────────────┴──────┘
+Static total 1.05 MiB; 39 files

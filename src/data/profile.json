@@ -1,0 +1,13 @@
+{
+  "displayName": "喻锦权",
+  "intro": "你好，我是喻锦权。这里记录我对嵌入式、FPGA、Linux 与光纤传感的探索，也分享一些可以直接使用的小工具。",
+  "about": "我关注电子工程与计算机科学相遇的地方：从嵌入式系统、FPGA 与 Linux，到光纤传感和数据处理。这个空间用来整理探索中的方法，把想法逐步做成可以运行、可以复现的作品。你可以阅读实现笔记，也可以直接打开工具，用自己的数据试一试。这里的三个初始项目均为本站开发的演示，不代表既往任职或科研成果。",
+  "directions": ["EE / CS", "嵌入式开发", "FPGA", "Linux", "光纤传感"],
+  "contactEmail": null,
+  "phone": null,
+  "location": null,
+  "githubUrl": "https://github.com/AnkeY1",
+  "socialLinks": [],
+  "resumePdfPath": null,
+  "publicProfileApproved": true
+}

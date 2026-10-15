@@ -1,0 +1,138 @@
+{
+  "totalBytes": 1121576,
+  "report": [
+    {
+      "route": "404.html",
+      "jsGzipKiB": 0.77,
+      "cssGzipKiB": 4.16,
+      "jsBudgetKiB": 90,
+      "pass": true
+    },
+    {
+      "route": "about/index.html",
+      "jsGzipKiB": 0.77,
+      "cssGzipKiB": 4.16,
+      "jsBudgetKiB": 90,
+      "pass": true
+    },
+    {
+      "route": "articles/index.html",
+      "jsGzipKiB": 1.33,
+      "cssGzipKiB": 4.16,
+      "jsBudgetKiB": 90,
+      "pass": true
+    },
+    {
+      "route": "articles/local-first-tools/index.html",
+      "jsGzipKiB": 0.77,
+      "cssGzipKiB": 4.16,
+      "jsBudgetKiB": 90,
+      "pass": true
+    },
+    {
+      "route": "articles/log-time-difference/index.html",
+      "jsGzipKiB": 0.77,
+      "cssGzipKiB": 4.16,
+      "jsBudgetKiB": 90,
+      "pass": true
+    },
+    {
+      "route": "articles/sampling-and-spectrum/index.html",
+      "jsGzipKiB": 0.77,
+      "cssGzipKiB": 4.16,
+      "jsBudgetKiB": 90,
+      "pass": true
+    },
+    {
+      "route": "index.html",
+      "jsGzipKiB": 0.92,
+      "cssGzipKiB": 5.9,
+      "jsBudgetKiB": 90,
+      "pass": true
+    },
+    {
+      "route": "lab/index.html",
+      "jsGzipKiB": 0.77,
+      "cssGzipKiB": 4.16,
+      "jsBudgetKiB": 90,
+      "pass": true
+    },
+    {
+      "route": "lab/signal-studio/index.html",
+      "jsGzipKiB": 208.54,
+      "cssGzipKiB": 5.38,
+      "jsBudgetKiB": 450,
+      "pass": true
+    },
+    {
+      "route": "privacy/index.html",
+      "jsGzipKiB": 0.77,
+      "cssGzipKiB": 4.16,
+      "jsBudgetKiB": 90,
+      "pass": true
+    },
+    {
+      "route": "projects/csv-plotter/index.html",
+      "jsGzipKiB": 0.77,
+      "cssGzipKiB": 4.16,
+      "jsBudgetKiB": 90,
+      "pass": true
+    },
+    {
+      "route": "projects/index.html",
+      "jsGzipKiB": 1.33,
+      "cssGzipKiB": 4.16,
+      "jsBudgetKiB": 90,
+      "pass": true
+    },
+    {
+      "route": "projects/log-analyzer/index.html",
+      "jsGzipKiB": 0.77,
+      "cssGzipKiB": 4.16,
+      "jsBudgetKiB": 90,
+      "pass": true
+    },
+    {
+      "route": "projects/signal-studio/index.html",
+      "jsGzipKiB": 0.77,
+      "cssGzipKiB": 4.16,
+      "jsBudgetKiB": 90,
+      "pass": true
+    },
+    {
+      "route": "resume/index.html",
+      "jsGzipKiB": 0.8,
+      "cssGzipKiB": 4.16,
+      "jsBudgetKiB": 90,
+      "pass": true
+    },
+    {
+      "route": "search/index.html",
+      "jsGzipKiB": 2.14,
+      "cssGzipKiB": 4.16,
+      "jsBudgetKiB": 90,
+      "pass": true
+    },
+    {
+      "route": "tools/csv-plotter/index.html",
+      "jsGzipKiB": 216.05,
+      "cssGzipKiB": 4.16,
+      "jsBudgetKiB": 450,
+      "pass": true
+    },
+    {
+      "route": "tools/index.html",
+      "jsGzipKiB": 0.77,
+      "cssGzipKiB": 4.16,
+      "jsBudgetKiB": 90,
+      "pass": true
+    },
+    {
+      "route": "tools/log-analyzer/index.html",
+      "jsGzipKiB": 210.48,
+      "cssGzipKiB": 5.59,
+      "jsBudgetKiB": 450,
+      "pass": true
+    }
+  ]
+}

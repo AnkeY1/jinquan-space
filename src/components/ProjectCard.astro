@@ -1,0 +1,132 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { withBase } from '../lib/url';
+import ProjectVisual from './ProjectVisual.astro';
+interface Props {
+  project: CollectionEntry<'projects'>;
+  featured?: boolean;
+}
+const { project, featured = false } = Astro.props;
+const p = project.data;
+---
+
+<article
+  class:list={['project-card', featured && 'featured']}
+  data-category={p.category}
+  data-tags={p.tags.join(',')}
+>
+  {p.cover ? (
+    <img
+      src={withBase(p.cover)}
+      alt={p.coverAlt}
+      width="720"
+      height="380"
+      loading="lazy"
+      style="width:100%;aspect-ratio:36/19;object-fit:cover;border-bottom:1px solid var(--border)"
+    />
+  ) : (
+    <ProjectVisual id={p.slug} compact={!featured} />
+  )}
+  <div class="project-copy">
+    <div class="project-meta">
+      <span class="project-type">{p.category === 'interactive-lab' ? '交互实验' : '数据处理'}</span>
+      <span class="demo-label">本站演示项目</span>
+    </div>
+    <h3>
+      <a href={withBase(`/projects/${p.slug}/`)}>
+        {p.title}
+        <span aria-hidden="true">↗</span>
+      </a>
+    </h3>
+    <p>{p.summary}</p>
+    <div class="tag-list">
+      {p.tags.map((tag) => (
+        <span class="tag">{tag}</span>
+      ))}
+    </div>
+  </div>
+</article>
+<style>
+  .project-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 11px;
+    overflow: hidden;
+    min-width: 0;
+    transition:
+      transform 0.15s,
+      border-color 0.15s;
+  }
+  .project-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--control-border);
+  }
+  .project-copy {
+    padding: 20px 22px 22px;
+  }
+  .project-meta {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+  .project-type {
+    font-size: 11px;
+    color: var(--accent);
+  }
+  .demo-label {
+    font-size: 10px;
+    color: var(--muted);
+  }
+  h3 {
+    font-size: 18px;
+    margin: 0 0 9px;
+  }
+  h3 a {
+    color: var(--text);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+  }
+  h3 a span {
+    color: var(--muted);
+    font-size: 18px;
+    font-weight: 400;
+  }
+  h3 a:hover {
+    color: var(--accent);
+  }
+  p {
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.75;
+    margin-bottom: 17px;
+  }
+  .featured .project-copy {
+    padding: 23px 26px 25px;
+  }
+  .featured h3 {
+    font-size: 21px;
+  }
+  .featured p {
+    max-width: 420px;
+  }
+  .featured :global(.project-visual svg) {
+    height: 220px;
+  }
+  @media (max-width: 760px) {
+    .featured :global(.project-visual svg) {
+      height: 180px;
+    }
+    .project-copy,
+    .featured .project-copy {
+      padding: 19px 20px;
+    }
+    .featured h3 {
+      font-size: 19px;
+    }
+  }
+</style>

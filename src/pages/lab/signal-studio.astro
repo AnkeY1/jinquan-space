@@ -1,0 +1,556 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import ToolShell from '../../components/ToolShell.astro';
+import {
+  SIGNAL_DEFAULTS,
+  SIGNAL_PRESETS,
+  SIGNAL_SAMPLE_COUNTS,
+  SIGNAL_SAMPLE_RATES,
+} from '../../data/experiments';
+
+const controls = [
+  { key: 'a1', label: '分量 1 幅度', min: 0, max: 2, step: 0.01, unit: '' },
+  { key: 'f1', label: '分量 1 频率', min: 0, max: 2048, step: 0.1, unit: 'Hz' },
+  { key: 'phase1', label: '分量 1 相位', min: -180, max: 180, step: 1, unit: '°' },
+  { key: 'a2', label: '分量 2 幅度', min: 0, max: 2, step: 0.01, unit: '' },
+  { key: 'f2', label: '分量 2 频率', min: 0, max: 2048, step: 0.1, unit: 'Hz' },
+  { key: 'phase2', label: '分量 2 相位', min: -180, max: 180, step: 1, unit: '°' },
+  { key: 'dc', label: '直流偏置', min: -2, max: 2, step: 0.01, unit: '' },
+  { key: 'noiseAmplitude', label: '均匀噪声幅度', min: 0, max: 1, step: 0.01, unit: '' },
+] as const;
+---
+
+<Layout
+  title="信号实验室"
+  description="调整正弦、采样率、噪声与窗函数，实时观察真实计算的时域样本与单边幅度谱。"
+>
+  <section class="signal-header">
+    <p class="eyebrow">INTERACTIVE LAB / 01</p>
+    <h1>
+      看见信号的另一面<span aria-hidden="true">。</span>
+    </h1>
+    <p class="signal-intro">
+      调整一组参数，连接时域与频域。在每一个采样点里，理解频率、窗函数与混叠。
+    </p>
+    <div class="signal-badges">
+      <span>本站演示项目</span>
+      <span>浏览器本地计算</span>
+      <span>可重复的合成数据</span>
+    </div>
+  </section>
+  <ToolShell>
+    <div slot="sidebar" class="panel stack signal-controls">
+      <div class="signal-control-heading">
+        <span class="eyebrow">CONTROL PANEL</span>
+        <h2>合成你的信号</h2>
+      </div>
+      <div class="signal-presets" aria-label="实验预设">
+        {SIGNAL_PRESETS.map((preset) => (
+          <button
+            type="button"
+            class="button"
+            data-signal-preset={preset.id}
+            title={preset.description}
+          >
+            {preset.title}
+          </button>
+        ))}
+      </div>
+      <form id="signal-form" novalidate>
+        <div class="signal-selects">
+          <label class="field" for="signal-fs">
+            采样率 Fs（Hz）
+            <select id="signal-fs" name="fs" aria-describedby="signal-fs-error">
+              {SIGNAL_SAMPLE_RATES.map((fs) => (
+                <option value={fs} selected={fs === SIGNAL_DEFAULTS.fs}>
+                  {fs}
+                </option>
+              ))}
+            </select>
+            <span class="signal-error" id="signal-fs-error"></span>
+          </label>
+          <label class="field" for="signal-n">
+            采样点数 N
+            <select id="signal-n" name="n" aria-describedby="signal-n-error">
+              {SIGNAL_SAMPLE_COUNTS.map((n) => (
+                <option value={n} selected={n === SIGNAL_DEFAULTS.n}>
+                  {n}
+                </option>
+              ))}
+            </select>
+            <span class="signal-error" id="signal-n-error"></span>
+          </label>
+        </div>
+        {controls.map((control) => (
+          <div class="signal-parameter">
+            <div class="signal-parameter-label">
+              <label for={`signal-${control.key}`}>
+                {control.label}
+                {control.unit && <span class="muted"> / {control.unit}</span>}
+              </label>
+              <input
+                id={`signal-${control.key}`}
+                name={control.key}
+                type="number"
+                min={control.min}
+                max={control.max}
+                step={control.step}
+                value={SIGNAL_DEFAULTS[control.key]}
+                aria-describedby={`signal-${control.key}-error`}
+                inputmode="decimal"
+              />
+            </div>
+            <input
+              type="range"
+              data-signal-range={control.key}
+              min={control.min}
+              max={control.max}
+              step={control.step}
+              value={SIGNAL_DEFAULTS[control.key]}
+              aria-label={`${control.label}滑块`}
+            />
+            <span class="signal-error" id={`signal-${control.key}-error`}></span>
+          </div>
+        ))}
+        <label class="field" for="signal-seed">
+          噪声种子（32 位无符号整数）
+          <input
+            id="signal-seed"
+            name="seed"
+            type="number"
+            min="0"
+            max="4294967295"
+            step="1"
+            value={SIGNAL_DEFAULTS.seed}
+            aria-describedby="signal-seed-error"
+            inputmode="numeric"
+          />
+          <span class="signal-error" id="signal-seed-error"></span>
+        </label>
+        <label class="field" for="signal-window">
+          窗函数
+          <select id="signal-window" name="window" aria-describedby="signal-window-error">
+            <option value="hann-periodic">周期 Hann 窗</option>
+            <option value="rectangular">矩形窗</option>
+          </select>
+          <span class="signal-error" id="signal-window-error"></span>
+        </label>
+        <div class="signal-actions">
+          <button type="submit" class="button primary" id="signal-recalculate">
+            重新计算
+          </button>
+          <button type="button" class="button" id="signal-reset">
+            重置参数
+          </button>
+          <button type="button" class="button" id="signal-cancel" disabled>
+            取消计算
+          </button>
+        </div>
+      </form>
+      <p class="muted signal-small">
+        合法参数变化后自动计算。均匀噪声位于 [−1, 1)，保持种子即可复现。
+      </p>
+    </div>
+    <div class="stack signal-results">
+      <div class="signal-result-top">
+        <span class="eyebrow">LIVE OUTPUT</span>
+        <span class="signal-live">
+          <span aria-hidden="true"></span>本地计算
+        </span>
+      </div>
+      <p class="status" id="signal-status" role="status" aria-live="polite">
+        正在生成默认信号…
+      </p>
+      <div id="signal-warnings" class="signal-warnings" role="status" hidden></div>
+      <div class="stat-grid" id="signal-summary" aria-label="信号摘要">
+        <div class="stat">
+          <span>频率间隔 Δf</span>
+          <strong id="signal-delta">—</strong>
+        </div>
+        <div class="stat">
+          <span>采样窗时长 N/Fs</span>
+          <strong id="signal-duration">—</strong>
+        </div>
+        <div class="stat">
+          <span>幅度谱最大频点</span>
+          <strong id="signal-peak">—</strong>
+        </div>
+      </div>
+      <section class="panel signal-chart-panel" aria-labelledby="signal-time-heading">
+        <div class="signal-chart-heading">
+          <div>
+            <p class="eyebrow">TIME DOMAIN</p>
+            <h2 id="signal-time-heading">时域采样波形</h2>
+          </div>
+          <span class="muted signal-small">不平滑 · 真实离散样本</span>
+        </div>
+        <div
+          id="signal-time-chart"
+          class="chart signal-chart"
+          role="img"
+          aria-label="时域采样波形，横轴时间秒，纵轴信号幅度"
+        ></div>
+        <p class="muted signal-small" id="signal-sample-description">
+          默认 1024 个样本；正在计算。
+        </p>
+      </section>
+      <section class="panel signal-chart-panel" aria-labelledby="signal-spectrum-heading">
+        <div class="signal-chart-heading">
+          <div>
+            <p class="eyebrow">FREQUENCY DOMAIN</p>
+            <h2 id="signal-spectrum-heading">单边幅度谱</h2>
+          </div>
+          <span class="muted signal-small">线性幅度 / 已补偿窗增益</span>
+        </div>
+        <div
+          id="signal-spectrum-chart"
+          class="chart signal-chart"
+          role="img"
+          aria-label="单边幅度谱，横轴频率赫兹，纵轴线性幅度"
+        ></div>
+        <p class="muted signal-small" id="signal-window-description">
+          周期 Hann 窗使用实际窗系数和归一化。
+        </p>
+      </section>
+      <div class="signal-actions signal-exports" aria-label="导出与分享">
+        <button type="button" class="button" id="signal-export-time" disabled>
+          下载时域 CSV
+        </button>
+        <button type="button" class="button" id="signal-export-spectrum" disabled>
+          下载频谱 CSV
+        </button>
+        <button type="button" class="button" id="signal-export-time-image" disabled>
+          时域 PNG
+        </button>
+        <button type="button" class="button" id="signal-export-image" disabled>
+          频谱 PNG
+        </button>
+        <button type="button" class="button" id="signal-share" disabled>
+          复制参数链接
+        </button>
+        <button type="button" class="button" id="signal-reset-view" disabled>
+          重置视图
+        </button>
+        <button type="button" class="button" id="signal-zoom-time" disabled>
+          查看前 1/4 时域
+        </button>
+        <button type="button" class="button" id="signal-retry-chart" hidden>
+          重试加载图表
+        </button>
+      </div>
+      <p class="muted signal-small">
+        CSV 包含完整数据。分享链接仅包含上方实验参数，不包含文件或个人资料。
+      </p>
+      <details class="panel signal-data-details">
+        <summary>查看数值表（前 16 个样本和频点）</summary>
+        <div class="table-wrap">
+          <table>
+            <caption>完整数据可通过 CSV 导出</caption>
+            <thead>
+              <tr>
+                <th scope="col">索引</th>
+                <th scope="col">时间 / s</th>
+                <th scope="col">信号幅度</th>
+                <th scope="col">频率 / Hz</th>
+                <th scope="col">单边幅度</th>
+              </tr>
+            </thead>
+            <tbody id="signal-data-table"></tbody>
+          </table>
+        </div>
+      </details>
+    </div>
+  </ToolShell>
+  <section class="signal-help panel" aria-labelledby="signal-help-heading">
+    <div>
+      <p class="eyebrow">HOW IT WORKS</p>
+      <h2 id="signal-help-heading">从采样点，到频率分量</h2>
+      <p>
+        每次计算都合成两路正弦、直流与固定种子的均匀噪声，再对加窗样本执行 radix-2
+        FFT。这里展示教学合成数据。
+      </p>
+    </div>
+    <div class="signal-help-grid">
+      <div>
+        <h3>幅度有明确口径</h3>
+        <p>
+          幅值除以实际窗系数和 W；普通正频率乘
+          2，直流与奈奎斯特频点保持单倍。这是线性单边幅度谱。周期 Hann
+          能减弱频谱泄漏，其相邻主瓣是预期现象。
+        </p>
+      </div>
+      <div>
+        <h3>采样率决定可辨频率</h3>
+        <p>
+          高于 Fs/2 的分量会出现混叠提示。频率输入允许到 2Fs；降低 Fs
+          后若超过上限，会保留输入并显示错误。N/Fs 是采样窗时长，最后一个实际采样时刻为 (N−1)/Fs。
+        </p>
+      </div>
+      <div>
+        <h3>可复现，也有边界</h3>
+        <p>
+          最大 N=8192。采用 Mulberry32 生成 [−1,1)
+          均匀噪声；改变其他参数不会重掷噪声。窗补偿适用于频点对齐的正弦，不能保证任意频率与噪声都精确还原。
+        </p>
+      </div>
+    </div>
+    <p class="signal-formula">
+      <code>x[n] = dc + A₁ sin(2πf₁n/Fs + φ₁) + A₂ sin(2πf₂n/Fs + φ₂) + noiseAmplitude · u[n]</code>
+    </p>
+  </section>
+  <noscript>
+    <p class="panel">
+      交互信号实验需要 JavaScript。上方说明仍可阅读；启用 JavaScript 后可本地计算、查看图表和导出。
+    </p>
+  </noscript>
+  <script>
+    import '../../scripts/signal-studio';
+  </script>
+</Layout>
+<style>
+  .signal-header {
+    padding: 2.5rem 0 2rem;
+  }
+  .signal-header h1 {
+    font-size: clamp(2rem, 4vw, 3.3rem);
+    letter-spacing: -0.04em;
+    margin: 0.6rem 0 1rem;
+  }
+  .signal-header h1 span {
+    color: var(--accent, #f4a43b);
+  }
+  .signal-intro {
+    max-width: 43rem;
+    color: var(--muted, #69717d);
+    font-size: 1.05rem;
+    line-height: 1.8;
+  }
+  .signal-badges {
+    display: flex;
+    gap: 0.7rem;
+    flex-wrap: wrap;
+    margin-top: 1.3rem;
+  }
+  .signal-badges span {
+    border: 1px solid var(--border, #d7dce1);
+    border-radius: 99px;
+    padding: 0.3rem 0.65rem;
+    font-size: 0.75rem;
+  }
+  .signal-control-heading h2 {
+    font-size: 1.25rem;
+    margin: 0.5rem 0;
+  }
+  .signal-presets {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+  .signal-presets .button {
+    font-size: 0.77rem;
+    padding: 0.45rem 0.6rem;
+  }
+  .signal-controls form {
+    display: grid;
+    gap: 0.8rem;
+  }
+  .signal-selects {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.65rem;
+  }
+  .signal-parameter {
+    display: grid;
+    gap: 0.25rem;
+  }
+  .signal-parameter-label {
+    display: flex;
+    gap: 0.6rem;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.84rem;
+  }
+  .signal-parameter-label input {
+    width: 6rem;
+    padding: 0.35rem 0.5rem;
+    text-align: right;
+  }
+  .signal-parameter input[type='range'] {
+    width: 100%;
+    accent-color: var(--accent, #c07d22);
+    cursor: pointer;
+    min-height: 1.6rem;
+  }
+  .signal-error {
+    color: var(--danger, #b33b34);
+    font-size: 0.75rem;
+    line-height: 1.5;
+  }
+  .signal-error:empty {
+    display: none;
+  }
+  .signal-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .signal-actions .button {
+    font-size: 0.8rem;
+  }
+  .signal-result-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .signal-live {
+    display: flex;
+    gap: 0.45rem;
+    align-items: center;
+    color: var(--muted, #69717d);
+    font-size: 0.75rem;
+  }
+  .signal-live > span {
+    width: 0.4rem;
+    height: 0.4rem;
+    border-radius: 50%;
+    background: #56876c;
+  }
+  .signal-small {
+    font-size: 0.77rem;
+    line-height: 1.7;
+  }
+  .signal-warnings {
+    padding: 0.9rem 1rem;
+    background: color-mix(in srgb, var(--accent, #d49c42) 12%, transparent);
+    border: 1px solid color-mix(in srgb, var(--accent, #d49c42) 35%, transparent);
+    border-radius: 0.6rem;
+    font-size: 0.85rem;
+    line-height: 1.7;
+  }
+  .signal-warnings p {
+    margin: 0;
+  }
+  .signal-chart-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  .signal-chart-heading h2 {
+    font-size: 1.05rem;
+    margin: 0.3rem 0;
+  }
+  .signal-chart-heading .eyebrow {
+    font-size: 0.63rem;
+    margin: 0;
+  }
+  .signal-chart {
+    height: 300px;
+    width: 100%;
+    min-width: 0;
+  }
+  .signal-chart-panel {
+    padding: 1.25rem !important;
+    min-width: 0;
+  }
+  .signal-chart-panel > p {
+    margin: 0.1rem 0 0;
+  }
+  .signal-data-details {
+    padding: 1rem;
+  }
+  .signal-data-details summary {
+    cursor: pointer;
+    font-size: 0.85rem;
+  }
+  .signal-data-details caption {
+    font-size: 0.75rem;
+    color: var(--muted, #69717d);
+    padding: 0.75rem;
+  }
+  .signal-help {
+    margin: 2rem 0;
+    padding: 2rem !important;
+  }
+  .signal-help > div:first-child {
+    max-width: 46rem;
+  }
+  .signal-help h2 {
+    font-size: 1.65rem;
+    margin: 0.6rem 0;
+  }
+  .signal-help p {
+    font-size: 0.88rem;
+    line-height: 1.9;
+    color: var(--muted, #69717d);
+  }
+  .signal-help-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.7rem;
+    margin-top: 1.5rem;
+  }
+  .signal-help h3 {
+    font-size: 0.95rem;
+  }
+  .signal-formula {
+    overflow: auto;
+    padding: 0.9rem;
+    background: var(--surface-soft, rgba(127, 127, 127, 0.06));
+    border-radius: 0.5rem;
+  }
+  .signal-formula code {
+    white-space: nowrap;
+    font-size: 0.75rem;
+  }
+  .signal-results {
+    min-width: 0;
+  }
+  .signal-results :global(.stat) {
+    min-width: 0;
+  }
+  .signal-results :global(.stat strong) {
+    font-size: 1.25rem;
+  }
+  .signal-results[data-stale='true'] :global(.chart) {
+    opacity: 0.55;
+  }
+  .signal-results[data-stale='true'] :global(.stat strong) {
+    opacity: 0.6;
+  }
+  input[aria-invalid='true'] {
+    border-color: var(--danger, #b33b34);
+  }
+  @media (max-width: 700px) {
+    .signal-header {
+      padding: 1.5rem 0;
+    }
+    .signal-help {
+      padding: 1.2rem !important;
+    }
+    .signal-help h2 {
+      font-size: 1.35rem;
+    }
+    .signal-help-grid {
+      grid-template-columns: 1fr;
+      gap: 0.5rem;
+    }
+    .signal-chart-heading {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+    .signal-chart {
+      height: 260px;
+    }
+    .signal-chart-panel {
+      padding: 0.8rem !important;
+    }
+    .signal-results :global(.stat-grid) {
+      grid-template-columns: 1fr;
+    }
+    .signal-exports .button {
+      flex: 1 1 40%;
+    }
+  }
+</style>

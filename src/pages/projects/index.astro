@@ -1,0 +1,48 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import { content } from '../../lib/content';
+const { projects } = await content();
+---
+
+<Layout title="项目">
+  <div class="page">
+    <header class="page-header">
+      <span class="eyebrow">WORK / BUILT TO EXPLORE</span>
+      <h1>
+        用作品，回答问题<span class="muted">。</span>
+      </h1>
+      <p>从数据处理到交互实验，这里收集可以实际运行的作品。初始三项均为本站演示项目。</p>
+    </header>
+    <div class="filters" data-filter-group="category">
+      <button class="filter" data-filter="all" aria-pressed="true">
+        全部
+      </button>
+      <button class="filter" data-filter="data-tools" aria-pressed="false">
+        数据处理
+      </button>
+      <button class="filter" data-filter="interactive-lab" aria-pressed="false">
+        交互实验
+      </button>
+      {[...new Set(projects.flatMap((p) => p.data.tags))].map((tag) => (
+        <button class="filter" data-filter={tag} aria-pressed="false">
+          {tag}
+        </button>
+      ))}
+    </div>
+    <p class="small muted" id="filter-count" role="status">
+      共 {projects.length} 个项目
+    </p>
+    <div class="grid-3" id="filtered-content">
+      {projects.map((project) => (
+        <ProjectCard project={project} />
+      ))}
+    </div>
+    <p id="filter-empty" class="empty-state" hidden>
+      当前筛选没有结果，请选择“全部”。
+    </p>
+  </div>
+  <script>
+    import '../../scripts/filters';
+  </script>
+</Layout>

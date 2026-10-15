@@ -1,0 +1,24 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { withBase } from '../lib/url';
+const { article } = Astro.props as { article: CollectionEntry<'articles'> };
+const a = article.data;
+---
+
+<article class="article-row" data-tags={a.tags.join(',')}>
+  <time datetime={a.publishedAt}>{a.publishedAt.replaceAll('-', '.')}</time>
+  <div class="article-main">
+    <h3>
+      <a href={withBase(`/articles/${a.slug}/`)}>{a.title}</a>
+    </h3>
+    <p>{a.summary}</p>
+    <div class="tag-list">
+      {a.tags.map((tag) => (
+        <span class="tag">{tag}</span>
+      ))}
+    </div>
+  </div>
+  <a class="arrow" href={withBase(`/articles/${a.slug}/`)} aria-label={`阅读${a.title}`}>
+    ↗
+  </a>
+</article>

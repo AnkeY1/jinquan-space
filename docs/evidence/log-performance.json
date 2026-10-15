@@ -1,0 +1,10 @@
+{
+  "records": 10000,
+  "elapsedMs": 242.43409999999858,
+  "viewport": {
+    "width": 1280,
+    "height": 720
+  },
+  "browser": "Chromium automated desktop",
+  "note": "Observed run; not a real-device guarantee."
+}

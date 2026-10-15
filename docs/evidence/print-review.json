@@ -1,0 +1,109 @@
+{
+  "reviewDate": "2026-10-15",
+  "siteVersion": "1.0.1",
+  "testBaseUrl": "http://127.0.0.1:4321",
+  "operation": "read-only inspection of Chromium print test PDFs",
+  "sourceType": "short preview template; long synthetic DOM-only pagination fixture",
+  "realExperienceClaimed": false,
+  "profileFileModified": false,
+  "expectedProfileName": "喻锦权",
+  "renderer": "bundled Poppler pdftoppm at 110 dpi",
+  "textAndPageInspector": "bundled pypdf",
+  "pymupdfAvailable": false,
+  "a4RoundingToleranceMm": 0.5,
+  "visualReview": {
+    "openedEveryRenderedPage": true,
+    "readableChinese": true,
+    "noClippedOrOverlappingContent": true,
+    "whiteBackgroundDarkText": true,
+    "navigationFooterButtonsHidden": true,
+    "templateAndDemoNoticeRetained": true,
+    "shortEntriesKeptTogether": true,
+    "longContentFlowsAcrossPages": true,
+    "correctedNameVisibleOnBothFirstPages": true,
+    "notes": "First-page template/demo notice is retained in both PDFs. Long pages contain explicitly synthetic entry labels. No printed page numbers were added or required by the specification."
+  },
+  "files": [
+    {
+      "source": "test-results/print/resume-short.pdf",
+      "sourceSha256": "eec3426f44d974cb23ced37088ce477938fedd7f5995dc8d9dd9fa906eb580bb",
+      "sourceBytes": 89406,
+      "pageCount": 1,
+      "pageCountExpectationMet": true,
+      "correctedNameVerified": true,
+      "previousNameAbsent": true,
+      "pages": [
+        {
+          "number": 1,
+          "sizePt": [595.91998, 842.88],
+          "sizeMm": [210.227, 297.349],
+          "nominalA4": true,
+          "containsChinese": true,
+          "containsExpectedProfileName": true,
+          "containsTemplateNotice": true,
+          "containsDemoLabel": true,
+          "syntheticEntryNumbers": [],
+          "textSpaceFontSizes": [11.0, 12.0, 14.0, 17.0, 22.0, 40.0],
+          "effectiveFontSizesPt": [8.25, 9.0, 10.5, 12.75, 16.5, 30.0],
+          "fonts": [
+            "/AAAAAA+Consolas",
+            "/BAAAAA+MicrosoftYaHeiUI-Bold",
+            "/CAAAAA+MicrosoftYaHeiUI"
+          ],
+          "renderedImage": "docs/evidence/print-short-1.png",
+          "renderedBytes": 96440,
+          "renderedSha256": "7b9c838630adcae5352af818d28f0f357e8e985ecee86fe90bdcdfab61beacee"
+        }
+      ]
+    },
+    {
+      "source": "test-results/print/resume-long.pdf",
+      "sourceSha256": "fc2616e0e45bf959b39aafbe5a26fd4c0a63a1d5d67bfb798c2809f1490fccf4",
+      "sourceBytes": 101177,
+      "pageCount": 2,
+      "pageCountExpectationMet": true,
+      "correctedNameVerified": true,
+      "previousNameAbsent": true,
+      "pages": [
+        {
+          "number": 1,
+          "sizePt": [595.91998, 842.88],
+          "sizeMm": [210.227, 297.349],
+          "nominalA4": true,
+          "containsChinese": true,
+          "containsExpectedProfileName": true,
+          "containsTemplateNotice": true,
+          "containsDemoLabel": true,
+          "syntheticEntryNumbers": [1, 2, 3, 4, 5, 6],
+          "textSpaceFontSizes": [11.0, 12.0, 14.0, 16.1, 22.0, 40.0],
+          "effectiveFontSizesPt": [8.25, 9.0, 10.5, 12.075, 16.5, 30.0],
+          "fonts": [
+            "/AAAAAA+Consolas",
+            "/BAAAAA+MicrosoftYaHeiUI-Bold",
+            "/CAAAAA+MicrosoftYaHeiUI"
+          ],
+          "renderedImage": "docs/evidence/print-long-1.png",
+          "renderedBytes": 240879,
+          "renderedSha256": "4a0e2a544a655a58fcd45b9d65e12b3d57f16e5f1e875caebca2453a3f747846"
+        },
+        {
+          "number": 2,
+          "sizePt": [595.91998, 842.88],
+          "sizeMm": [210.227, 297.349],
+          "nominalA4": true,
+          "containsChinese": true,
+          "containsExpectedProfileName": false,
+          "containsTemplateNotice": false,
+          "containsDemoLabel": true,
+          "syntheticEntryNumbers": [7, 8, 9, 10, 11, 12],
+          "textSpaceFontSizes": [14.0, 16.1, 17.0, 22.0],
+          "effectiveFontSizesPt": [10.5, 12.075, 12.75, 16.5],
+          "fonts": ["/BAAAAA+MicrosoftYaHeiUI-Bold", "/CAAAAA+MicrosoftYaHeiUI"],
+          "renderedImage": "docs/evidence/print-long-2.png",
+          "renderedBytes": 245983,
+          "renderedSha256": "8f0706bf63d110bd163ae23ef334220df4644c2dfb694a66c8dc7ba4dafa843c"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,428 @@
+---
+import '../styles/global.css';
+import { navigation, siteConfig } from '../config/site';
+import { withBase, toAbsoluteSiteUrl } from '../lib/url';
+import Icon from '../components/Icon.astro';
+interface Props {
+  title?: string;
+  description?: string;
+  noindex?: boolean;
+  wide?: boolean;
+}
+const { title, description = siteConfig.description, noindex = false, wide = false } = Astro.props;
+const pageTitle = title ? `${title} · ${siteConfig.displayName} / Space` : siteConfig.title;
+const mode = __SITE_MODE__;
+const logical = Astro.url.pathname.slice(import.meta.env.BASE_URL.replace(/\/$/, '').length) || '/';
+const canonical = toAbsoluteSiteUrl(logical);
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta
+      name="robots"
+      content={mode === 'preview' || noindex ? 'noindex,nofollow' : 'index,follow'}
+    />
+    <meta name="color-scheme" content="light dark" />
+    <title>{pageTitle}</title>
+    <link rel="icon" type="image/svg+xml" href={withBase('/favicon.svg')} />
+    {canonical && (
+      <>
+        <link rel="canonical" href={canonical} />
+        <meta property="og:url" content={canonical} />
+        <meta property="og:title" content={pageTitle} />
+        <meta property="og:description" content={description} />
+        <meta property="og:type" content="website" />
+      </>
+    )}
+    <script is:inline>
+      try {
+        const t = localStorage.getItem('jinquan-space:theme:v1');
+        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+      } catch {}
+    </script>
+    <slot name="head" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">
+      跳转到正文
+    </a>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href={withBase('/')} aria-label={`${siteConfig.displayName} Space 首页`}>
+          <span class="brand-mark" aria-hidden="true">
+            <Icon name="wave" size={22} />
+          </span>
+          <span>
+            {siteConfig.displayName}
+            <span class="brand-slash"> / </span>
+            <span class="brand-space">Space</span>
+          </span>
+        </a>
+        <nav class="desktop-nav" aria-label="主导航">
+          {navigation.map(([label, path]) => (
+            <a
+              href={withBase(path)}
+              aria-current={
+                (path === '/' ? logical === '/' : logical.startsWith(path)) ? 'page' : undefined
+              }
+            >
+              {label}
+            </a>
+          ))}
+        </nav>
+        <div class="header-actions">
+          <a class="icon-link" href={withBase('/search/')} aria-label="站内搜索">
+            <Icon name="search" size={19} />
+          </a>
+          <label class="theme-picker">
+            <Icon name="sun" size={18} />
+            <span class="sr-only">选择主题</span>
+            <select id="theme-select" aria-label="选择主题">
+              <option value="system">系统</option>
+              <option value="light">浅色</option>
+              <option value="dark">深色</option>
+            </select>
+          </label>
+          <details class="mobile-menu">
+            <summary aria-label="打开导航菜单" aria-expanded="false">
+              <span class="menu-lines" aria-hidden="true">
+                ☰
+              </span>
+              <span class="sr-only">菜单</span>
+            </summary>
+            <nav aria-label="移动主导航">
+              {navigation.map(([label, path]) => (
+                <a
+                  href={withBase(path)}
+                  aria-current={
+                    (path === '/' ? logical === '/' : logical.startsWith(path)) ? 'page' : undefined
+                  }
+                >
+                  {label}
+                </a>
+              ))}
+            </nav>
+          </details>
+        </div>
+      </div>
+    </header>
+    <main id="main" tabindex="-1" class:list={['container', wide && 'wide']}>
+      <slot />
+    </main>
+    <footer class="site-footer">
+      <div class="container">
+        <div class="footer-top">
+          <div class="footer-brand">
+            {siteConfig.displayName} <span class="muted">/ Space</span>
+            <p>记录探索，让想法落地。</p>
+          </div>
+          <div class="footer-links">
+            <a href={withBase('/about/')}>关于本站</a>
+            <a href={withBase('/privacy/')}>隐私说明</a>
+            {siteConfig.footerSourceUrl && <a href={siteConfig.footerSourceUrl}>源代码</a>}
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <span>
+            © {new Date().getFullYear()} {siteConfig.displayName}
+          </span>
+          <span>
+            {mode === 'preview' ? (
+              <span class="preview-indicator">
+                <i />
+                预览版 · 公开资料待确认
+              </span>
+            ) : (
+              '用好奇心与代码搭建'
+            )}
+          </span>
+          <a href="#main">回到顶部 ↑</a>
+        </div>
+      </div>
+    </footer>
+    <script>
+      import '../scripts/global';
+    </script>
+  </body>
+</html>
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    height: 68px;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+  }
+  .header-inner {
+    display: flex;
+    height: 100%;
+    align-items: center;
+    gap: 30px;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    text-decoration: none;
+    color: var(--text);
+    font-size: 15px;
+    font-weight: 650;
+    white-space: nowrap;
+    letter-spacing: -0.02em;
+  }
+  .brand-mark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 32px;
+    border-radius: 6px;
+    background: var(--text);
+    color: var(--bg);
+    font-family: Consolas, monospace;
+    font-size: 22px;
+    line-height: 1;
+  }
+  .brand-mark span {
+    color: #8eb8f0;
+    display: inline;
+  }
+  .brand-slash {
+    font-weight: 400;
+    margin: 0 4px;
+    color: var(--control-border);
+  }
+  .brand-space {
+    font-size: 14px;
+    font-weight: 450;
+  }
+  .desktop-nav {
+    display: flex;
+    align-items: center;
+    gap: 27px;
+    margin-left: auto;
+    height: 100%;
+  }
+  .desktop-nav a {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    font-size: 13px;
+    color: var(--muted);
+    text-decoration: none;
+    position: relative;
+    white-space: nowrap;
+  }
+  .desktop-nav a[aria-current='page'] {
+    color: var(--accent);
+  }
+  .desktop-nav a[aria-current='page']:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--accent);
+  }
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .icon-link {
+    display: grid;
+    place-content: center;
+    width: 44px;
+    height: 44px;
+    color: var(--muted);
+    border-radius: 7px;
+  }
+  .icon-link:hover {
+    background: var(--surface-subtle);
+  }
+  .theme-picker {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--muted);
+    position: relative;
+  }
+  .theme-picker select {
+    font-size: 12px;
+    min-height: 44px;
+    padding: 0 3px;
+    border: 0;
+    background: transparent;
+    min-width: 47px;
+    width: auto;
+  }
+  .site-footer {
+    border-top: 1px solid var(--border);
+    padding: 34px 0 21px;
+  }
+  .footer-top {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    padding-bottom: 28px;
+  }
+  .footer-brand {
+    font-size: 15px;
+    font-weight: 600;
+  }
+  .footer-brand p {
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--muted);
+    margin: 7px 0 0;
+  }
+  .footer-links {
+    display: flex;
+    gap: 25px;
+    font-size: 12px;
+    align-items: start;
+  }
+  .footer-links a,
+  .footer-bottom a {
+    color: var(--muted);
+    text-decoration: none;
+  }
+  .footer-bottom {
+    border-top: 1px solid var(--border);
+    padding-top: 19px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: var(--muted);
+    font-size: 11px;
+    gap: 12px;
+  }
+  .preview-indicator {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .preview-indicator i {
+    width: 5px;
+    height: 5px;
+    background: var(--muted);
+    border-radius: 50%;
+  }
+  .mobile-menu {
+    display: none;
+  }
+  .sr-only {
+    position: absolute !important;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+  @media (max-width: 1050px) {
+    .desktop-nav {
+      gap: 18px;
+    }
+    .header-inner {
+      gap: 20px;
+    }
+    .brand-space {
+      display: none;
+    }
+    .brand-slash {
+      margin: 0;
+    }
+    .header-actions {
+      gap: 0;
+    }
+  }
+  @media (max-width: 760px) {
+    .desktop-nav {
+      display: none;
+    }
+    .header-actions {
+      margin-left: auto;
+      gap: 1px;
+    }
+    .header-inner {
+      gap: 8px;
+    }
+    .brand {
+      font-size: 14px;
+      gap: 8px;
+    }
+    .brand-slash,
+    .brand-space {
+      display: none;
+    }
+    .mobile-menu {
+      display: block;
+    }
+    .mobile-menu summary {
+      list-style: none;
+      width: 44px;
+      display: grid;
+      place-items: center;
+      font-size: 20px;
+      padding: 0;
+    }
+    .mobile-menu summary::-webkit-details-marker {
+      display: none;
+    }
+    .mobile-menu nav {
+      position: absolute;
+      top: 67px;
+      left: 0;
+      right: 0;
+      padding: 15px 20px 22px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      box-shadow: 0 12px 20px #0000000d;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4px;
+    }
+    .mobile-menu nav a {
+      padding: 11px 16px;
+      color: var(--text);
+      text-decoration: none;
+      border-radius: 6px;
+      font-size: 14px;
+      min-height: 44px;
+    }
+    .mobile-menu nav a[aria-current] {
+      background: var(--accent-subtle);
+      color: var(--accent);
+    }
+    .theme-picker > svg {
+      display: none;
+    }
+    .footer-top {
+      padding-bottom: 22px;
+    }
+    .footer-links {
+      gap: 15px;
+    }
+    .footer-bottom {
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+    .footer-bottom > span:nth-child(2) {
+      order: 3;
+      width: 100%;
+      margin-top: 3px;
+    }
+    .footer-bottom a {
+      margin-left: auto;
+    }
+  }
+</style>

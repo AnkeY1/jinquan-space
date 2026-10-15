@@ -1,0 +1,198 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { profile, resume } from '../lib/profile';
+import { withBase } from '../lib/url';
+import { siteConfig } from '../config/site';
+const isResumeTemplate = [
+  resume.education,
+  resume.experience,
+  resume.publications,
+  resume.patents,
+  resume.awards,
+].every((entries) => entries.length === 0);
+---
+
+<Layout title="在线简历" noindex={!siteConfig.resumeIndexable}>
+  <article class="page resume-page">
+    <div class="resume-top no-print">
+      <a href={withBase('/about/')} class="text-link">
+        ← 关于我
+      </a>
+      <div class="button-row">
+        <button class="button primary" id="print-resume" type="button">
+          打印 / 另存为 PDF
+        </button>
+        {profile.resumePdfPath && (
+          <a class="button" href={withBase(profile.resumePdfPath)} download>
+            下载 PDF 简历
+          </a>
+        )}
+      </div>
+    </div>
+    <header class="resume-header">
+      <span class="eyebrow">PROFILE / RESUME</span>
+      <h1>{profile.displayName}</h1>
+      <div class="tag-list">
+        {profile.directions.map((d) => (
+          <span class="tag">{d}</span>
+        ))}
+      </div>
+      {profile.contactEmail && (
+        <p>
+          <a href={`mailto:${profile.contactEmail}`}>{profile.contactEmail}</a>
+        </p>
+      )}
+      {profile.location && <p>{profile.location}</p>}
+    </header>
+    {(isResumeTemplate || !profile.publicProfileApproved || __SITE_MODE__ === 'preview') && (
+      <p class="status resume-disclaimer">
+        {__SITE_MODE__ === 'preview' && '当前为预览构建。'}
+        {!profile.publicProfileApproved && '个人资料尚未完成公开确认。'}
+        {isResumeTemplate && '资料模板：教育、任职与真实成果暂未填写。'}下列作品为本站演示项目。
+      </p>
+    )}
+    <section>
+      <h2>方向说明</h2>
+      <p>{resume.summary}</p>
+    </section>
+    {resume.education.length > 0 && (
+      <section>
+        <h2>教育</h2>
+        {resume.education.map((e) => (
+          <div class="resume-item">
+            <h3>{e.title}</h3>
+            <p class="muted">
+              {e.subtitle} {e.period}
+            </p>
+            <p>{e.description}</p>
+          </div>
+        ))}
+      </section>
+    )}
+    {resume.experience.length > 0 && (
+      <section>
+        <h2>经历</h2>
+        {resume.experience.map((e) => (
+          <div class="resume-item">
+            <h3>{e.title}</h3>
+            <p class="muted">
+              {e.subtitle} {e.period}
+            </p>
+            <p>{e.description}</p>
+          </div>
+        ))}
+      </section>
+    )}
+    <section>
+      <h2>本站演示项目</h2>
+      {resume.projects.map((p) => (
+        <div class="resume-item">
+          <h3>
+            <a href={withBase(p.path)}>{p.title} ↗</a>
+          </h3>
+          <p>{p.description}</p>
+        </div>
+      ))}
+    </section>
+    {resume.publications.length > 0 && (
+      <section>
+        <h2>公开成果</h2>
+        {resume.publications.map((p) => (
+          <p>{p.url ? <a href={p.url}>{p.title}</a> : p.title}</p>
+        ))}
+      </section>
+    )}
+    {resume.patents.length > 0 && (
+      <section>
+        <h2>专利</h2>
+        {resume.patents.map((e) => (
+          <div class="resume-item">
+            <h3>{e.title}</h3>
+            <p>{e.description}</p>
+          </div>
+        ))}
+      </section>
+    )}
+    {resume.awards.length > 0 && (
+      <section>
+        <h2>获奖</h2>
+        {resume.awards.map((e) => (
+          <div class="resume-item">
+            <h3>{e.title}</h3>
+            <p>{e.description}</p>
+          </div>
+        ))}
+      </section>
+    )}
+    {isResumeTemplate && (
+      <p class="small muted no-print resume-note">
+        教育、工作与真实成果暂未填写。页面支持浏览器打印；打印版本保留资料模板提示。
+      </p>
+    )}
+  </article>
+  <script>
+    document.querySelector('#print-resume')?.addEventListener('click', () => window.print());
+  </script>
+</Layout>
+<style>
+  .resume-page {
+    max-width: 900px;
+    margin: auto;
+  }
+  .resume-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    margin-bottom: 45px;
+    flex-wrap: wrap;
+  }
+  .resume-header {
+    padding-bottom: 30px;
+    border-bottom: 1px solid var(--border);
+  }
+  .resume-header h1 {
+    font-size: 40px;
+    margin: 12px 0 20px;
+  }
+  .resume-page section {
+    margin: 32px 0;
+  }
+  .resume-page section h2 {
+    font-size: 22px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 10px;
+  }
+  .resume-item {
+    margin: 23px 0;
+  }
+  .resume-item h3 {
+    font-size: 17px;
+  }
+  .resume-item h3 a {
+    color: var(--text);
+    text-decoration: none;
+  }
+  .resume-item p,
+  .resume-page section > p {
+    font-size: 15px;
+    color: var(--muted);
+  }
+  .resume-note {
+    border-top: 1px solid var(--border);
+    padding-top: 25px;
+    margin-top: 36px;
+  }
+  @media print {
+    .resume-header {
+      padding-bottom: 18px;
+    }
+    .resume-page section {
+      margin: 22px 0;
+    }
+    .resume-page section > p,
+    .resume-item p {
+      font-size: 10.5pt;
+    }
+  }
+</style>

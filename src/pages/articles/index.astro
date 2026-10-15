@@ -1,0 +1,46 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import ArticleRow from '../../components/ArticleRow.astro';
+import { content } from '../../lib/content';
+const { articles } = await content();
+---
+
+<Layout title="文章">
+  <div class="page articles-index">
+    <header class="page-header">
+      <span class="eyebrow">NOTES / THINKING IN PUBLIC</span>
+      <h1>记录过程，也分享方法。</h1>
+      <p>把实现中的选择、边界与推导写下来。这里的初始内容是本站功能说明与原创演示文章。</p>
+    </header>
+    <div class="filters" data-filter-group="tag">
+      <button class="filter" data-filter="all" aria-pressed="true">
+        全部
+      </button>
+      {[...new Set(articles.flatMap((a) => a.data.tags))].map((tag) => (
+        <button class="filter" data-filter={tag} aria-pressed="false">
+          {tag}
+        </button>
+      ))}
+    </div>
+    <p class="small muted" id="filter-count" role="status">
+      共 {articles.length} 篇文章
+    </p>
+    <div id="filtered-content">
+      {articles.map((article) => (
+        <ArticleRow article={article} />
+      ))}
+    </div>
+    <p id="filter-empty" class="empty-state" hidden>
+      没有符合该标签的文章，请选择“全部”。
+    </p>
+  </div>
+  <script>
+    import '../../scripts/filters';
+  </script>
+</Layout>
+<style>
+  .articles-index {
+    max-width: 1020px;
+    margin: auto;
+  }
+</style>

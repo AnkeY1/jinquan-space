@@ -1,0 +1,133 @@
+---
+import { render } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import ProjectVisual from '../../components/ProjectVisual.astro';
+import { content } from '../../lib/content';
+import { withBase } from '../../lib/url';
+export async function getStaticPaths() {
+  const { projects } = await content();
+  return projects.map((project) => ({ params: { slug: project.data.slug }, props: { project } }));
+}
+const { project } = Astro.props;
+const p = project.data;
+const { Content } = await render(project);
+const { articles } = await content();
+const related = articles.filter((a) => p.relatedArticleSlugs.includes(a.data.slug));
+---
+
+<Layout title={p.title} description={p.summary}>
+  <div class="page project-detail">
+    <div class="breadcrumbs">
+      <a href={withBase('/projects/')}>项目</a>
+      <span>/</span>
+      <span>{p.title}</span>
+    </div>
+    <header class="page-header">
+      <span class="badge">本站演示项目</span>
+      <h1>{p.title}</h1>
+      <p>{p.summary}</p>
+      <div class="tag-list">
+        {p.tags.map((tag: string) => (
+          <span class="tag">{tag}</span>
+        ))}
+      </div>
+    </header>
+    <div class="detail-feature">
+      {p.cover ? (
+        <img src={withBase(p.cover)} alt={p.coverAlt} width="720" height="380" />
+      ) : (
+        <ProjectVisual id={p.slug} />
+      )}
+      <div class="try-project">
+        <span class="eyebrow">MADE TO BE USED</span>
+        <h2>亲手试一试。</h2>
+        <p>无需注册，在当前浏览器中完成计算。先从合成示例开始，再选择自己的文件。</p>
+        <a class="button primary" href={withBase(p.demoPath)}>
+          打开演示 <span aria-hidden="true">↗</span>
+        </a>
+      </div>
+    </div>
+    <div class="reading prose">
+      <Content />
+    </div>
+    <aside class="related">
+      <span class="section-number">RELATED READING</span>
+      <h2>继续了解实现</h2>
+      {related.map((a) => (
+        <a href={withBase(`/articles/${a.data.slug}/`)}>
+          {a.data.title} <span aria-hidden="true">↗</span>
+        </a>
+      ))}
+    </aside>
+  </div>
+</Layout>
+<style>
+  .project-detail {
+    max-width: 1060px;
+    margin: auto;
+  }
+  .detail-feature {
+    display: grid;
+    grid-template-columns: 1.35fr 1fr;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    margin: 0 0 42px;
+    background: var(--surface);
+  }
+  .detail-feature :global(.project-visual) {
+    border: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .detail-feature :global(svg) {
+    height: 230px;
+  }
+  .try-project {
+    padding: 35px;
+    border-left: 1px solid var(--border);
+  }
+  .try-project h2 {
+    font-size: 24px;
+    margin: 12px 0;
+  }
+  .try-project p {
+    color: var(--muted);
+    font-size: 14px;
+  }
+  .reading {
+    margin: auto;
+  }
+  .related {
+    max-width: 760px;
+    margin: 42px auto 0;
+    padding-top: 30px;
+    border-top: 1px solid var(--border);
+  }
+  .related h2 {
+    font-size: 22px;
+    margin: 8px 0 20px;
+  }
+  .related a {
+    display: flex;
+    justify-content: space-between;
+    text-decoration: none;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 15px;
+  }
+  @media (max-width: 760px) {
+    .detail-feature {
+      grid-template-columns: 1fr;
+    }
+    .try-project {
+      border-left: 0;
+      border-top: 1px solid var(--border);
+      padding: 24px;
+    }
+    .detail-feature :global(svg) {
+      height: 185px;
+    }
+  }
+</style>

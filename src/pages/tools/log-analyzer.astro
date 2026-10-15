@@ -1,0 +1,651 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import ToolShell from '../../components/ToolShell.astro';
+import { withBase } from '../../lib/url';
+---
+
+<Layout
+  title="日志时间差分析器"
+  description="在浏览器本地分析日志记录间隔，按唯一 PingNumber 对比日志 B − 日志 A。保留负时间差、分段与无效记录。"
+>
+  <header class="log-heading">
+    <a class="muted" href={withBase('/tools/')}>
+      工具箱 / 01
+    </a>
+    <p class="log-eyebrow">LOCAL FIRST · 浏览器本地处理</p>
+    <h1>
+      日志时间差分析器<span aria-hidden="true">.</span>
+    </h1>
+    <p>从一份日志看记录间隔，从两份日志看同编号时间差。保留每一次真实的正负变化。</p>
+  </header>
+  <ToolShell>
+    <div slot="sidebar" class="stack" id="log-inputs">
+      <section class="panel log-input-panel" aria-labelledby="log-input-title">
+        <div class="log-panel-label">
+          <span>01 / 输入</span>
+          <span class="log-local">本地处理</span>
+        </div>
+        <h2 id="log-input-title">准备日志</h2>
+        <p class="muted">A 必填，B 可选。每个文件最多 10 MiB。</p>
+        <div
+          class="log-drop"
+          id="log-drop"
+          tabindex="0"
+          role="group"
+          aria-label="日志文件拖放区：拖入一或两个文件，或使用下方文件选择按钮"
+        >
+          <label class="field" for="log-file-a">
+            日志 A <span class="muted">必填</span>
+            <input id="log-file-a" type="file" accept=".log,.txt,text/plain" />
+          </label>
+          <p id="log-name-a" class="log-file-name muted">
+            尚未选择
+          </p>
+          <label class="field" for="log-file-b">
+            日志 B <span class="muted">可选</span>
+            <input id="log-file-b" type="file" accept=".log,.txt,text/plain" />
+          </label>
+          <p id="log-name-b" class="log-file-name muted">
+            尚未选择
+          </p>
+          <p class="muted">也可以把 1–2 个文本文件拖到这里。</p>
+        </div>
+        <button id="log-example" class="button" type="button">
+          使用双日志示例
+        </button>
+        <p class="log-sample-links">
+          <a href={withBase('/samples/log-a.log')} download>
+            下载示例 A
+          </a>{' '}
+          ·{' '}
+          <a href={withBase('/samples/log-b.log')} download>
+            下载示例 B
+          </a>
+        </p>
+        <p class="muted">示例是合成数据，包含上、下超界记录。</p>
+        <details>
+          <summary>高级设置与运行分段</summary>
+          <label class="field" for="log-encoding">
+            文件编码
+            <select id="log-encoding">
+              <option value="utf-8">UTF-8（默认，支持 BOM）</option>
+              <option value="gb18030">GB18030</option>
+            </select>
+          </label>
+          <div id="log-segment-fields" hidden>
+            <label class="field" for="log-segment-a">
+              比较日志 A 的分段
+              <select id="log-segment-a">
+                <option value="1">第 1 段</option>
+              </select>
+            </label>
+            <label class="field" for="log-segment-b">
+              比较日志 B 的分段
+              <select id="log-segment-b">
+                <option value="1">第 1 段</option>
+              </select>
+            </label>
+            <p class="muted">只比较所选分段。修改后请重新分析。</p>
+          </div>
+        </details>
+      </section>
+      <section class="panel log-input-panel" aria-labelledby="log-view-title">
+        <div class="log-panel-label">02 / 视图</div>
+        <h2 id="log-view-title">查看每一次变化</h2>
+        <label class="log-check">
+          <input type="checkbox" id="log-focus" /> 聚焦正常范围
+        </label>
+        <div class="log-bounds">
+          <label class="field" for="log-lower">
+            下界（ms）
+            <input id="log-lower" type="number" step="any" value="-500" />
+          </label>
+          <label class="field" for="log-upper">
+            上界（ms）
+            <input id="log-upper" type="number" step="any" value="500" />
+          </label>
+        </div>
+        <p class="muted">超界点用边界三角标识，统计和 CSV 始终保留原值。</p>
+        <p id="log-view-error" role="alert" class="log-error" hidden></p>
+        <div class="log-actions">
+          <button id="log-start" class="button primary" type="button" disabled>
+            开始分析
+          </button>
+          <button id="log-cancel" class="button" type="button" disabled>
+            取消
+          </button>
+          <button id="log-clear" class="button" type="button">
+            清空
+          </button>
+        </div>
+        <p id="log-status" class="status" role="status" aria-live="polite">
+          等待文件 · 也可以使用示例立即体验
+        </p>
+        <progress id="log-progress" aria-label="日志分析进度" hidden></progress>
+      </section>
+      <section class="panel log-input-panel log-help" aria-labelledby="log-format-title">
+        <h2 id="log-format-title">支持的日志格式</h2>
+        <code>PingNumber: 100 Time: 26 10 15 10 00 00 900</code>
+        <p class="muted">
+          Time 依次为年、月、日、时、分、秒、毫秒。两位年固定为 2000 + YY，四位年支持
+          2000–2099。毫秒 4 就是 4 ms。
+        </p>
+        <details>
+          <summary>计算口径与限制</summary>
+          <p>
+            按原始文件顺序计算。编号严格回退时开启新段，可能重启或乱序；无效候选打断相邻计算。负时间差保留，不自动补秒。
+          </p>
+          <p>
+            UTC API 只用于隔离本地时区和夏令时，不代表日志声明了
+            UTC。这里计算的是记录时间差，不自动解释为网络传输延迟。
+          </p>
+          <p>
+            每文件最多 100,000 条候选、500,000 物理行，单行最多 64 KiB。只支持本页格式，不解析
+            ISO/RMC 或自定义正则。大文件更适合电脑。
+          </p>
+          <p>
+            所有文件在浏览器 Worker 中处理，不上传、不写入浏览器存储或
+            URL。清空后释放页面持有的引用。
+          </p>
+        </details>
+      </section>
+    </div>
+    <div class="stack" id="log-results" aria-busy="false">
+      <div id="log-empty" class="panel log-empty">
+        <div class="log-mini-wave" aria-hidden="true">
+          ▁▁▂▂▁▂▂▆▂▂▁▁
+        </div>
+        <h2>先给时间一个参照</h2>
+        <p class="muted">选择日志，或使用合成示例。这里会显示完整统计、时间差图和可导出的记录。</p>
+        <div class="log-empty-facts">
+          <span>01 文件顺序</span>
+          <span>02 真实正负值</span>
+          <span>03 完整 CSV</span>
+        </div>
+      </div>
+      <p id="log-stale" class="status" role="status" hidden>
+        结果已过期，请重新分析。当前图表仅供参考，导出已禁用。
+      </p>
+      <div id="log-output" class="stack" hidden>
+        <section class="panel log-result-panel" aria-labelledby="log-summary-title">
+          <div class="log-panel-label">分析摘要</div>
+          <h2 id="log-summary-title">输入与数据质量</h2>
+          <div id="log-summary" class="log-summary-grid"></div>
+          <p id="log-segmentation" class="muted"></p>
+        </section>
+        <section id="log-a-section" class="panel log-result-panel" aria-labelledby="log-a-title">
+          <div class="log-chart-heading">
+            <div>
+              <div class="log-panel-label">日志 A / 相邻记录</div>
+              <h2 id="log-a-title">记录间隔</h2>
+            </div>
+            <div class="log-chart-actions">
+              <button class="button" type="button" data-reset="a">
+                重置视图
+              </button>
+              <button class="button" type="button" data-png="a" data-export>
+                导出 PNG
+              </button>
+            </div>
+          </div>
+          <p class="muted">全部分段内可比较间隔 · 日志原始时间（未声明时区）</p>
+          <div id="log-stats-a" class="stat-grid"></div>
+          <div
+            id="log-chart-a"
+            class="chart log-chart"
+            role="img"
+            aria-label="日志 A 记录间隔图，完整数值见下方记录表"
+          ></div>
+          <p id="log-chart-note-a" class="muted"></p>
+        </section>
+        <section
+          id="log-b-section"
+          class="panel log-result-panel"
+          aria-labelledby="log-b-title"
+          hidden
+        >
+          <div class="log-chart-heading">
+            <div>
+              <div class="log-panel-label">日志 B / 相邻记录</div>
+              <h2 id="log-b-title">记录间隔</h2>
+            </div>
+            <div class="log-chart-actions">
+              <button class="button" type="button" data-reset="b">
+                重置视图
+              </button>
+              <button class="button" type="button" data-png="b" data-export>
+                导出 PNG
+              </button>
+            </div>
+          </div>
+          <p class="muted">全部分段内可比较间隔 · 日志原始时间（未声明时区）</p>
+          <div id="log-stats-b" class="stat-grid"></div>
+          <div
+            id="log-chart-b"
+            class="chart log-chart"
+            role="img"
+            aria-label="日志 B 记录间隔图，完整数值见下方记录表"
+          ></div>
+          <p id="log-chart-note-b" class="muted"></p>
+        </section>
+        <section
+          id="log-comparison-section"
+          class="panel log-result-panel"
+          aria-labelledby="log-comparison-title"
+          hidden
+        >
+          <div class="log-chart-heading">
+            <div>
+              <div class="log-panel-label">双日志 / 唯一编号配对</div>
+              <h2 id="log-comparison-title">同编号时间差：日志 B − 日志 A</h2>
+            </div>
+            <div class="log-chart-actions">
+              <button class="button" type="button" data-reset="comparison">
+                重置视图
+              </button>
+              <button class="button" type="button" data-png="comparison" data-export>
+                导出 PNG
+              </button>
+            </div>
+          </div>
+          <p id="log-comparison-scope" class="muted"></p>
+          <div id="log-stats-comparison" class="stat-grid"></div>
+          <p id="log-no-pairs" class="status" hidden>
+            所选分段没有公共唯一编号，无法计算双文件时间差。请检查分段与编号。
+          </p>
+          <div
+            id="log-chart-comparison"
+            class="chart log-chart"
+            role="img"
+            aria-label="日志 B 减日志 A 的同编号时间差，完整数值见下方记录表"
+          ></div>
+          <p id="log-chart-note-comparison" class="muted"></p>
+        </section>
+        <section class="panel log-result-panel" aria-labelledby="log-table-title">
+          <div class="log-panel-label">完整派生结果</div>
+          <h2 id="log-table-title">记录表</h2>
+          <div class="log-table-controls">
+            <label class="field" for="log-table-kind">
+              查看
+              <select id="log-table-kind">
+                <option value="a">日志 A 间隔</option>
+                <option value="b">日志 B 间隔</option>
+                <option value="comparison">B − A 匹配结果</option>
+                <option value="outliers">超出当前显示范围</option>
+              </select>
+            </label>
+            <label class="field" for="log-page-size">
+              每页
+              <select id="log-page-size">
+                <option value="50">50 条</option>
+                <option value="100">100 条</option>
+              </select>
+            </label>
+          </div>
+          <div
+            class="table-wrap"
+            tabindex="0"
+            role="region"
+            aria-label="日志分析记录表，可横向滚动"
+          >
+            <table id="log-table">
+              <caption class="log-visually-hidden">
+                分析记录。空间隔表示分段开头或无效候选之后的断点。
+              </caption>
+              <thead></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+          <div class="log-pagination">
+            <button id="log-prev" class="button" type="button">
+              上一页
+            </button>
+            <span id="log-page-info" aria-live="polite"></span>
+            <button id="log-next" class="button" type="button">
+              下一页
+            </button>
+          </div>
+          <p class="muted">空字段表示无可比较间隔；界面最多显示 3 位小数，CSV 保留原始计算精度。</p>
+        </section>
+        <section class="panel log-result-panel">
+          <h2>数据问题与匹配明细</h2>
+          <details>
+            <summary id="log-detail-summary">无效记录、重号和单侧编号</summary>
+            <p class="muted">每类明细最多显示前 200 条。完整无效记录可导出。</p>
+            <div id="log-details"></div>
+          </details>
+          <div class="log-export-row">
+            <button id="log-export-a" class="button" type="button" data-export>
+              导出 A 间隔 CSV
+            </button>
+            <button id="log-export-b" class="button" type="button" data-export>
+              导出 B 间隔 CSV
+            </button>
+            <button id="log-export-comparison" class="button" type="button" data-export>
+              导出 B − A CSV
+            </button>
+            <button id="log-export-errors" class="button" type="button" data-export>
+              导出错误清单 CSV
+            </button>
+          </div>
+        </section>
+      </div>
+    </div>
+  </ToolShell>
+  <script>
+    import '../../scripts/log-analyzer';
+  </script>
+</Layout>
+<style>
+  .log-heading {
+    margin: 1.5rem 0 2.5rem;
+    max-width: 58rem;
+  }
+  .log-heading h1 {
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    letter-spacing: -0.045em;
+    line-height: 1.25;
+    margin: 0.6rem 0 1rem;
+  }
+  .log-heading h1 span {
+    color: var(--accent, #b6ed59);
+  }
+  .log-heading > p:last-child {
+    max-width: 43rem;
+    color: var(--muted, #66738a);
+    line-height: 1.8;
+  }
+  .log-eyebrow,
+  .log-panel-label {
+    font: 600 0.7rem/1.5 var(--font-mono, monospace);
+    letter-spacing: 0.09em;
+    color: var(--muted, #66738a);
+  }
+  .log-eyebrow {
+    margin-top: 1.4rem;
+  }
+  .log-input-panel,
+  .log-result-panel {
+    padding: 1.35rem;
+  }
+  .log-panel-label {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.7rem;
+  }
+  .log-local {
+    color: var(--accent, #b6ed59);
+  }
+  .log-input-panel h2,
+  .log-result-panel h2 {
+    font-size: 1.13rem;
+    margin: 0.55rem 0 1rem;
+  }
+  .log-input-panel .field {
+    margin: 1rem 0 0.4rem;
+  }
+  .log-drop {
+    border: 1px dashed var(--border, #3a4545);
+    border-radius: 8px;
+    padding: 0.9rem;
+    margin: 1rem 0;
+  }
+  .log-drop[data-drag='true'] {
+    border-color: var(--accent, #b6ed59);
+    background: var(--accent-subtle, #eef3fa);
+  }
+  .log-drop input[type='file'] {
+    max-width: 100%;
+    font-size: 0.75rem;
+  }
+  .log-file-name {
+    overflow-wrap: anywhere;
+    font-size: 0.75rem;
+    margin: 0.3rem 0 0.8rem;
+  }
+  .log-input-panel > .button {
+    width: 100%;
+  }
+  .log-sample-links {
+    font-size: 0.8rem;
+  }
+  .log-help code {
+    font-size: 0.7rem;
+    display: block;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    padding: 0.8rem;
+    background: var(--bg, #111818);
+    border-radius: 6px;
+    line-height: 1.8;
+  }
+  .log-help p,
+  details p {
+    font-size: 0.8rem;
+    line-height: 1.8;
+  }
+  .log-input-panel details {
+    margin-top: 1rem;
+  }
+  .log-bounds {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.6rem;
+  }
+  .log-bounds input {
+    width: 100%;
+  }
+  .log-check {
+    display: flex;
+    gap: 0.65rem;
+    align-items: center;
+    font-size: 0.9rem;
+  }
+  .log-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-top: 1.25rem;
+  }
+  .log-actions .primary {
+    flex: 1;
+    min-width: 7rem;
+  }
+  progress {
+    width: 100%;
+    accent-color: var(--accent, #b6ed59);
+  }
+  .log-error {
+    color: var(--danger, #e97979);
+    font-size: 0.8rem;
+  }
+  .log-empty {
+    min-height: 36rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 2rem;
+  }
+  .log-empty p {
+    max-width: 27rem;
+    line-height: 1.9;
+  }
+  .log-mini-wave {
+    font: 3rem/1 monospace;
+    color: var(--accent, #b6ed59);
+    letter-spacing: 0.08em;
+    margin-bottom: 2rem;
+  }
+  .log-empty-facts {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    font: 0.7rem var(--font-mono, monospace);
+    margin-top: 3rem;
+    color: var(--muted, #66738a);
+  }
+  .log-summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+  }
+  .log-summary-grid :global(dl) {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    font-size: 0.8rem;
+    gap: 0.6rem;
+    margin: 0;
+  }
+  .log-summary-grid :global(dd) {
+    margin: 0;
+    text-align: right;
+    font-family: monospace;
+  }
+  .log-summary-grid :global(h3) {
+    font-size: 0.9rem;
+    margin-top: 0;
+    overflow-wrap: anywhere;
+  }
+  .log-summary-grid :global(.log-summary-card) {
+    padding: 1rem;
+    border: 1px solid var(--border, #3a4545);
+    border-radius: 7px;
+  }
+  .log-chart-heading {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+  .log-chart-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  .log-chart {
+    width: 100%;
+    height: 340px;
+    min-width: 0;
+  }
+  .log-result-panel .stat-grid {
+    margin: 1.25rem 0;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .log-result-panel :global(.stat) {
+    min-width: 0;
+  }
+  .log-result-panel :global(.stat strong) {
+    font: 500 1.1rem var(--font-mono, monospace);
+    display: block;
+    overflow-wrap: anywhere;
+  }
+  .log-result-panel :global(.stat span) {
+    font-size: 0.7rem;
+    color: var(--muted, #66738a);
+  }
+  .log-table-controls {
+    display: flex;
+    gap: 1rem;
+    align-items: end;
+    margin: 1rem 0;
+  }
+  .log-table-controls .field {
+    flex: 1;
+  }
+  .log-table-controls .field:last-child {
+    max-width: 8rem;
+  }
+  .log-pagination {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1rem;
+    font-size: 0.8rem;
+  }
+  .log-export-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1.4rem;
+  }
+  .log-result-panel :global(td) {
+    font: 0.75rem/1.7 var(--font-mono, monospace);
+    white-space: nowrap;
+  }
+  .log-result-panel :global(th) {
+    font-size: 0.7rem;
+    white-space: nowrap;
+  }
+  .log-result-panel :global(.log-detail-list) {
+    padding-left: 1.25rem;
+    font-size: 0.8rem;
+    line-height: 1.8;
+    overflow-wrap: anywhere;
+  }
+  .log-result-panel :global(.log-detail-list li) {
+    margin-bottom: 0.5rem;
+  }
+  .log-visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+  #log-stale {
+    border: 1px solid var(--accent, #b6ed59);
+  }
+  [hidden] {
+    display: none !important;
+  }
+  @media (max-width: 600px) {
+    .log-heading {
+      margin-top: 1rem;
+    }
+    .log-heading h1 {
+      font-size: 2rem;
+    }
+    .log-result-panel,
+    .log-input-panel {
+      padding: 1rem;
+    }
+    .log-chart {
+      height: 300px;
+    }
+    .log-result-panel .stat-grid {
+      gap: 0.5rem;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .log-chart-actions .button {
+      font-size: 0.7rem;
+      padding: 0.5rem 0.6rem;
+    }
+    .log-empty {
+      min-height: 25rem;
+    }
+    .log-mini-wave {
+      font-size: 1.8rem;
+    }
+    .log-table-controls {
+      gap: 0.5rem;
+    }
+    .log-pagination {
+      gap: 0.4rem;
+    }
+    .log-pagination .button {
+      padding: 0.5rem;
+    }
+    .log-empty-facts {
+      gap: 0.75rem;
+    }
+  }
+</style>

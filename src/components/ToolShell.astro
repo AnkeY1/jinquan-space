@@ -1,0 +1,25 @@
+---
+interface Props {
+  title?: string;
+  description?: string;
+}
+const { title, description } = Astro.props;
+---
+
+<div class="tool-shell">
+  {title && (
+    <header class="tool-heading">
+      <h1>{title}</h1>
+      {description && <p>{description}</p>}
+    </header>
+  )}
+  <aside class="tool-sidebar">
+    <slot name="sidebar" />
+  </aside>
+  <div class="tool-results">
+    <slot />
+  </div>
+</div>
+<noscript>
+  <p class="status error">计算需要启用 JavaScript。你仍可阅读本页的格式、隐私与计算说明。</p>
+</noscript>

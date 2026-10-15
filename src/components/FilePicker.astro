@@ -1,0 +1,42 @@
+---
+interface Props {
+  id: string;
+  dropId: string;
+  label: string;
+  accept?: string;
+  help?: string;
+  multiple?: boolean;
+}
+const {
+  id,
+  dropId,
+  label,
+  accept,
+  help = '选择文件，或拖拽到这里。',
+  multiple = false,
+} = Astro.props;
+---
+
+<div id={dropId} class="file-picker">
+  <label class="field" for={id}>
+    {label}
+  </label>
+  <input id={id} type="file" accept={accept} multiple={multiple} aria-describedby={`${id}-help`} />
+  <p id={`${id}-help`} class="muted">
+    {help}
+  </p>
+</div>
+<style>
+  .file-picker {
+    border: 1px dashed var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    transition: background 0.15s;
+  }
+  .file-picker.is-dragging {
+    background: var(--surface-subtle);
+  }
+  input {
+    max-width: 100%;
+  }
+</style>

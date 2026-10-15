@@ -1,0 +1,113 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { withBase } from '../lib/url';
+---
+
+<Layout title="站内搜索" noindex>
+  <div
+    class="page search-page"
+    id="search-app"
+    data-index={withBase('/search-index.json')}
+    data-base={import.meta.env.BASE_URL}
+  >
+    <header class="page-header">
+      <span class="eyebrow">SEARCH / FIND A THREAD</span>
+      <h1>寻找一个想法。</h1>
+      <p>在项目、文章、工具与实验中搜索。支持中文子串和用空格分开的多个关键词。</p>
+    </header>
+    <form id="search-form" role="search">
+      <label for="search-query">搜索关键词</label>
+      <div class="search-input-row">
+        <input
+          id="search-query"
+          name="q"
+          type="search"
+          placeholder="试试“时间差”或“FFT”"
+          autocomplete="off"
+          maxlength="200"
+        />
+        <button class="button primary" type="submit">
+          搜索 ↗
+        </button>
+      </div>
+    </form>
+    <p class="small muted">
+      搜索词保存在地址的 #hash 中，可能被浏览器历史或分享保留。请勿输入敏感信息。
+    </p>
+    <p class="status" id="search-status" role="status">
+      输入关键词，开始探索。
+    </p>
+    <button class="button" id="search-retry" hidden>
+      重新加载索引
+    </button>
+    <div id="search-results"></div>
+    <div class="search-shortcuts">
+      <a href={withBase('/projects/')}>浏览项目 ↗</a>
+      <a href={withBase('/articles/')}>阅读文章 ↗</a>
+      <button class="button small" id="search-clear" type="button">
+        清空搜索
+      </button>
+    </div>
+    <noscript>
+      <p class="noscript-note">搜索需要 JavaScript。你可以直接浏览项目与文章列表。</p>
+    </noscript>
+  </div>
+  <script>
+    import '../scripts/search';
+  </script>
+</Layout>
+<style>
+  .search-page {
+    max-width: 930px;
+    margin: auto;
+    min-height: 650px;
+  }
+  form label {
+    font-size: 13px;
+    font-weight: 550;
+  }
+  .search-input-row {
+    display: flex;
+    gap: 10px;
+    margin: 8px 0 12px;
+  }
+  .search-input-row input {
+    flex: 1;
+    min-width: 0;
+  }
+  .search-input-row button {
+    flex: none;
+  }
+  .search-shortcuts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    align-items: center;
+    margin-top: 30px;
+    font-size: 14px;
+  }
+  .search-shortcuts a {
+    text-decoration: none;
+  }
+  .search-page :global(.search-result) {
+    padding: 22px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .search-page :global(.search-result h2) {
+    font-size: 19px;
+    margin: 8px 0;
+  }
+  .search-page :global(.search-result h2 a) {
+    color: var(--text);
+    text-decoration: none;
+  }
+  .search-page :global(.search-result p) {
+    font-size: 14px;
+    color: var(--muted);
+    margin: 0;
+  }
+  .search-page :global(.search-result .result-type) {
+    font-size: 11px;
+    color: var(--accent);
+  }
+</style>

@@ -1,0 +1,12 @@
+{
+  "metric": "Browser input event through computed spectrum, setOption and two animation frames",
+  "sampleCount": 1024,
+  "debounceMs": 100,
+  "durationsMs": [151.30000000074506, 161.09999999776483, 140.89999999850988],
+  "medianMs": 151.30000000074506,
+  "browser": "155.0.8059.79",
+  "viewport": {
+    "width": 1280,
+    "height": 720
+  }
+}

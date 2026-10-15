@@ -1,0 +1,30 @@
+---
+interface Props {
+  title: string;
+  titleId: string;
+  id?: string;
+}
+const { title, titleId, id } = Astro.props;
+---
+
+<section id={id} class="panel stack" aria-labelledby={titleId}>
+  <div class="chart-panel-heading">
+    <h2 id={titleId}>{title}</h2>
+    <slot name="actions" />
+  </div>
+  <slot />
+</section>
+<style>
+  .chart-panel-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+  }
+  @media (max-width: 500px) {
+    .chart-panel-heading {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+  }
+</style>

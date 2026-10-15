@@ -1,0 +1,191 @@
+---
+interface Props {
+  id: string;
+  compact?: boolean;
+}
+const { id, compact = false } = Astro.props;
+const sine = Array.from(
+  { length: 145 },
+  (_, i) =>
+    `${i === 0 ? 'M' : 'L'}${35 + i * 2.2},${125 - 30 * Math.sin(i / 7) - 12 * Math.sin(i / 2.8)}`,
+).join(' ');
+---
+
+<div
+  class:list={['project-visual', id, compact && 'compact']}
+  role="img"
+  aria-label={
+    id === 'log-analyzer'
+      ? '日志分析流程示意：记录、匹配、保留正负时间差'
+      : id === 'csv-plotter'
+        ? 'CSV 数据列到曲线的结构示意'
+        : '合成信号与频谱结构示意'
+  }
+>
+  <div class="visual-label">
+    <span class="tiny-square" />
+    {id === 'log-analyzer'
+      ? 'LOG / TIME DIFFERENCE'
+      : id === 'csv-plotter'
+        ? 'DATA / VISUALIZATION'
+        : 'SIGNAL / SPECTRUM'}
+    <span class="visual-note">结构示意</span>
+  </div>
+  {id === 'log-analyzer' ? (
+    <svg viewBox="0 0 580 235" fill="none">
+      <path
+        class="grid"
+        d="M30 45h520M30 90h520M30 135h520M30 180h520M80 30v170m100-170v170m100-170v170m100-170v170m100-170v170"
+      />
+      <rect class="node" x="43" y="50" width="145" height="105" rx="8" />
+      <text class="label" x="58" y="73">
+        记录 A / B
+      </text>
+      <path class="code-line" d="M58 88h94m-94 12h113m-113 12h75m-75 12h102m-102 12h85" />
+      <path class="connector" d="M190 102h62m-8-5 8 5-8 5" />
+      <rect class="node" x="256" y="72" width="105" height="62" rx="8" />
+      <text class="label" x="276" y="98">
+        编号匹配
+      </text>
+      <text class="note" x="279" y="118">
+        B − A
+      </text>
+      <path class="connector" d="M362 102h36m-8-5 8 5-8 5" />
+      <path class="axis" d="M406 50v127h130M406 113h132" />
+      <path class="plot" d="m413 101 20-8 21 4 20-41m9 101 20-56 21-7" />
+      <circle class="point" cx="433" cy="93" r="3" />
+      <circle class="point" cx="454" cy="97" r="3" />
+      <path class="anomaly" d="m470 55 4-7 4 7m1 106 4 7 4-7" />
+      <text class="note" x="43" y="194">
+        原始顺序
+      </text>
+      <text class="note" x="254" y="194">
+        唯一编号
+      </text>
+      <text class="note" x="408" y="194">
+        保留正负差值
+      </text>
+    </svg>
+  ) : id === 'csv-plotter' ? (
+    <svg viewBox="0 0 390 235" fill="none">
+      <path
+        class="grid"
+        d="M30 60h330M30 100h330M30 140h330M30 180h330M70 40v155m70-155v155m70-155v155m70-155v155"
+      />
+      <path class="axis" d="M35 40v155h325" />
+      <path class="plot" d="m35 165 42-31 43 10 43-53m45 14 43-38 44 11 63-38" />
+      <path class="plot second" d="m35 111 42 12 43-29 43 27 45-3 43 31m44-20 63 19" />
+      <circle class="gap" cx="188" cy="98" r="7" />
+      <text class="note" x="270" y="215">
+        null → 断点
+      </text>
+    </svg>
+  ) : (
+    <svg viewBox="0 0 390 235" fill="none">
+      <path
+        class="grid"
+        d="M30 65h330M30 125h330M30 185h330M80 40v155m70-155v155m70-155v155m70-155v155"
+      />
+      <path class="axis" d="M30 125h330" />
+      <path class="plot" d={sine} />
+      <text class="note" x="33" y="213">
+        x[n] → FFT → M[k]
+      </text>
+      <path class="spectrum" d="M267 215v-24m9 24v-49m9 49v-24m22 24v-9m9 9v-24m9 24v-9" />
+    </svg>
+  )}
+</div>
+<style>
+  .project-visual {
+    border-bottom: 1px solid var(--border);
+    background: var(--surface-subtle);
+    overflow: hidden;
+    padding: 16px 18px 0;
+    color: var(--text);
+  }
+  .visual-label {
+    font-family: Consolas, monospace;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    color: var(--muted);
+  }
+  .tiny-square {
+    width: 5px;
+    height: 5px;
+    background: var(--accent);
+    display: block;
+  }
+  .visual-note {
+    margin-left: auto;
+    font-family: system-ui;
+    font-size: 9px;
+    letter-spacing: 0;
+  }
+  .project-visual svg {
+    display: block;
+    width: 100%;
+    height: 190px;
+  }
+  .grid {
+    stroke: var(--border);
+    stroke-width: 0.5;
+    stroke-dasharray: 2 5;
+  }
+  .node {
+    fill: var(--surface);
+    stroke: var(--border);
+  }
+  .label {
+    fill: var(--text);
+    font: 12px system-ui;
+  }
+  .note {
+    fill: var(--muted);
+    font: 10px system-ui;
+  }
+  .code-line {
+    stroke: var(--control-border);
+    stroke-width: 2;
+    opacity: 0.65;
+  }
+  .connector,
+  .axis {
+    stroke: var(--control-border);
+    stroke-width: 1;
+  }
+  .plot {
+    stroke: var(--accent);
+    stroke-width: 2;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+  }
+  .point {
+    fill: var(--accent);
+  }
+  .anomaly {
+    fill: #c36b35;
+    stroke: #c36b35;
+    stroke-width: 1.5;
+  }
+  .second {
+    stroke: #ba7a43;
+  }
+  .gap {
+    stroke: var(--muted);
+    stroke-dasharray: 2 2;
+    opacity: 0.5;
+  }
+  .spectrum {
+    stroke: var(--accent);
+    stroke-width: 3;
+  }
+  .compact svg {
+    height: 135px;
+  }
+  .compact {
+    padding: 14px 14px 0;
+  }
+</style>

@@ -1,0 +1,102 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Icon from '../../components/Icon.astro';
+import { tools } from '../../data/tools';
+import { withBase } from '../../lib/url';
+---
+
+<Layout title="工具箱">
+  <div class="page">
+    <header class="page-header">
+      <span class="eyebrow">TOOLBOX / LOCAL BY DESIGN</span>
+      <h1>小工具，解决具体问题。</h1>
+      <p>不用安装，也不用注册。选一份文件，完成一次分析。所有计算在当前页面的浏览器中进行。</p>
+    </header>
+    <div class="grid-2">
+      {tools.map((t, i) => (
+        <article class="panel tool-card">
+          <div class="tool-card-top">
+            <span class="tool-number mono">0{i + 1}</span>
+            <Icon name={i ? 'chart' : 'file'} size={33} />
+          </div>
+          <span class="eyebrow">{t.format}</span>
+          <h2>{t.title}</h2>
+          <p>{t.summary}</p>
+          <div class="tag-list">
+            {t.tags.map((tag) => (
+              <span class="tag">{tag}</span>
+            ))}
+          </div>
+          <div class="tool-limit">
+            <Icon name="shield" size={15} />
+            <span>浏览器本地处理</span>
+            <span>{t.limit}</span>
+          </div>
+          <a class="button primary" href={withBase(t.path)}>
+            打开工具 <Icon name="arrow" size={17} />
+          </a>
+        </article>
+      ))}
+    </div>
+    <section class="tools-help">
+      <h2>选择文件之前</h2>
+      <p>
+        你可以先使用合成示例了解输入格式。文件内容、名称和计算结果不发送给网站服务端，不写入浏览器存储。刷新或关闭页面后，需重新选择文件。
+      </p>
+      <p>
+        10 MiB
+        是产品保护上限。较大文件更适合电脑；实际速度取决于文件结构与设备内存。托管服务的页面访问日志边界见
+        <a href={withBase('/privacy/')}>隐私说明</a>。
+      </p>
+    </section>
+  </div>
+</Layout>
+<style>
+  .tool-card {
+    padding: 30px;
+  }
+  .tool-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--accent);
+    margin-bottom: 30px;
+  }
+  .tool-number {
+    font-size: 14px;
+    color: var(--muted);
+  }
+  h2 {
+    font-size: 25px;
+    margin: 11px 0 15px;
+  }
+  .tool-card > p {
+    color: var(--muted);
+    font-size: 14px;
+  }
+  .tool-limit {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 11px;
+    color: var(--muted);
+    margin: 25px 0 21px;
+    flex-wrap: wrap;
+  }
+  .tool-limit > span:last-child {
+    margin-left: auto;
+  }
+  .tools-help {
+    max-width: 760px;
+    margin: 48px 0 0;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+  }
+  .tools-help h2 {
+    font-size: 20px;
+  }
+  .tools-help p {
+    font-size: 14px;
+    color: var(--muted);
+  }
+</style>

@@ -1,0 +1,6 @@
+__proto__,温度,,温度,constructor
+0,1,1.2e-3,4,"<img src=x onerror=alert(1)>"
+1,,12abc,5,"<script>alert(1)</script>"
+2,Infinity,0x10,6,"=HYPERLINK(""https://example.invalid/"",""demo"")"
+3,9007199254740993,NaN,7,"+SUM(1,2)"
+4,-900,-0.125,8,"@SUM(1,2)"

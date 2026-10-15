@@ -1,0 +1,31 @@
+{
+  "checkedAtLocal": "2026-10-15 15:06 Asia/Shanghai",
+  "platform": "Windows x64",
+  "browser": "Playwright Firefox",
+  "installedVersionFromMetadata": "157.0",
+  "playwrightRevision": "1555",
+  "download": {
+    "status": "completed",
+    "command": "node node_modules/@playwright/test/cli.js install firefox webkit",
+    "firefoxArchiveMiB": 123.8,
+    "webkitVersion": "27.2",
+    "webkitRevision": "2370"
+  },
+  "launch": {
+    "status": "blocked",
+    "playwrightError": "browserType.launch: spawn UNKNOWN",
+    "directCommand": "firefox.exe -headless --version",
+    "win32ErrorCode": 14001,
+    "directError": "应用程序无法启动，因为应用程序的并行配置不正确。",
+    "windowsEventProvider": "SideBySide",
+    "windowsEventId": 33,
+    "windowsEventMessage": "激活上下文生成失败。找不到从属程序集 mozglue,language=\"*\",type=\"win32\",version=\"1.0.0.0\"。"
+  },
+  "boundedDiagnosis": {
+    "mozglueDllPresent": true,
+    "mozglueEmbeddedManifestPresent": true,
+    "appLocalManifestAttempt": "An exact copy of the embedded mozglue assembly manifest was briefly added alongside the downloaded browser. The same launch failure persisted. The added file was removed.",
+    "operatingSystemChanges": false
+  },
+  "validation": "Firefox web functionality and screenshots were not executed because the installed browser process could not launch. WebKit results are recorded separately."
+}

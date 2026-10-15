@@ -1,0 +1,188 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { profile } from '../lib/profile';
+import { withBase } from '../lib/url';
+---
+
+<Layout title="关于我">
+  <div class="page about-page">
+    <header class="about-hero">
+      <div class="name-tile" aria-hidden="true">
+        {Array.from(profile.displayName)
+          .slice(-2)
+          .map((character) => (
+            <span>{character}</span>
+          ))}
+        <small>SPACE</small>
+      </div>
+      <div>
+        <span class="eyebrow">HELLO / A LITTLE ABOUT ME</span>
+        <h1>你好，我是{profile.displayName}。</h1>
+        <p>保持好奇，把事情弄明白。</p>
+      </div>
+    </header>
+    <div class="about-content">
+      <section>
+        <h2>在电子与代码之间</h2>
+        <p>{profile.about}</p>
+        <div class="tag-list">
+          {profile.directions.map((d) => (
+            <span class="tag">{d}</span>
+          ))}
+        </div>
+      </section>
+      <section>
+        <h2>从这里了解我的方向</h2>
+        <p>
+          本站三个演示项目围绕本地数据处理与交互式信号计算展开。项目详情记录实现机制，工具与实验则提供直接可用的入口。
+        </p>
+        <div class="button-row">
+          <a class="button primary" href={withBase('/projects/')}>
+            浏览项目 ↗
+          </a>
+          <a class="button" href={withBase('/resume/')}>
+            查看在线简历
+          </a>
+        </div>
+      </section>
+      <section>
+        <h2>联系与公开资料</h2>
+        {profile.contactEmail ? (
+          <p>
+            <a href={`mailto:${profile.contactEmail}`}>{profile.contactEmail}</a>
+          </p>
+        ) : (
+          <p class="muted">公开联系方式尚未设置。</p>
+        )}
+        {profile.githubUrl && (
+          <p>
+            <a href={profile.githubUrl} rel="noopener noreferrer">
+              GitHub ↗
+            </a>
+          </p>
+        )}
+        {profile.socialLinks.map((link) => (
+          <p>
+            <a href={link.url} rel="noopener noreferrer">
+              {link.label} ↗
+            </a>
+          </p>
+        ))}
+        <p class="small muted">
+          {__SITE_MODE__ === 'preview' && '当前为预览构建。'}
+          教育、任职与成果仅在站长提供并确认公开后展示。
+        </p>
+      </section>
+      <section class="site-note">
+        <span class="eyebrow">ABOUT THIS SPACE</span>
+        <h2>一个持续生长的个人空间</h2>
+        <p>
+          这里收集作品、技术笔记与小实验。本站工具在浏览器本地处理文件，应用只保存主题偏好。
+          <a href={withBase('/privacy/')}>阅读隐私说明</a>。
+        </p>
+      </section>
+    </div>
+  </div>
+</Layout>
+<style>
+  .about-page {
+    max-width: 1000px;
+    margin: auto;
+  }
+  .about-hero {
+    display: flex;
+    align-items: center;
+    gap: 38px;
+    margin: 10px 0 60px;
+  }
+  .name-tile {
+    flex: none;
+    width: 125px;
+    height: 144px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    border-radius: 10px;
+    position: relative;
+    padding: 22px;
+    color: var(--text);
+    font-size: 37px;
+    line-height: 1.1;
+  }
+  .name-tile span {
+    display: block;
+  }
+  .name-tile small {
+    position: absolute;
+    right: 12px;
+    bottom: 12px;
+    font:
+      12px Consolas,
+      monospace;
+    color: var(--accent);
+  }
+  h1 {
+    font-size: clamp(27px, 3.3vw, 39px);
+    margin: 15px 0 10px;
+  }
+  .about-hero p {
+    color: var(--muted);
+    font-size: 16px;
+    margin: 0;
+  }
+  .about-content {
+    margin-left: 163px;
+    max-width: 720px;
+  }
+  .about-content section {
+    margin-bottom: 45px;
+  }
+  .about-content h2 {
+    font-size: 24px;
+  }
+  .about-content p {
+    color: var(--muted);
+    line-height: 1.9;
+  }
+  .site-note {
+    padding-top: 28px;
+    border-top: 1px solid var(--border);
+  }
+  .site-note h2 {
+    font-size: 20px;
+    margin-top: 12px;
+  }
+  @media (max-width: 760px) {
+    .about-hero {
+      gap: 20px;
+      margin-bottom: 36px;
+      align-items: start;
+    }
+    .name-tile {
+      width: 78px;
+      height: 100px;
+      padding: 15px;
+      font-size: 27px;
+    }
+    .name-tile small {
+      font-size: 9px;
+      right: 8px;
+      bottom: 8px;
+    }
+    .about-hero .eyebrow {
+      font-size: 9px;
+    }
+    h1 {
+      font-size: 26px;
+      margin-top: 9px;
+    }
+    .about-hero p {
+      font-size: 13px;
+    }
+    .about-content {
+      margin-left: 0;
+    }
+    .about-content h2 {
+      font-size: 22px;
+    }
+  }
+</style>

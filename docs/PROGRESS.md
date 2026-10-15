@@ -1,0 +1,17 @@
+# Progress
+
+2026-10-15 public release preparation: Owner explicitly authorized “同意公开发布当前版本”. Logged-in GitHub UI created the public repository https://github.com/AnkeY1/jinquan-space. Approved profile is now `true`; public GitHub URL is https://github.com/AnkeY1 and contact email remains `null`. Release origin is `https://ankey1.github.io`, base is `/jinquan-space/`, target URL is https://ankey1.github.io/jinquan-space/. Repository upload, Pages workflow success and online availability are not yet confirmed by this local preparation record.
+
+Public rendering now removes stale preview/unapproved statements while preserving the true demo-project and empty-resume-template labels. Public fixture tests capture the original real-profile bytes instead of assuming the approval value is false, and additionally check release-page wording. Isolated public-mode tests passed (approval gate, draft/preview filtering, canonical, noindex, sitemap, links, real profile unchanged; invalid dates/slugs/related projects rejected). Astro check:86files,0errors/0warnings/0hints. Targeted ESLint and full-project Prettier format check passed.
+
+Actual public production build passed with `SITE_MODE=public`, `SITE_ORIGIN=https://ankey1.github.io`, `SITE_BASE=/jinquan-space/`. Normal `dist/` contains19HTML pages and40total public files (1.07MiB, including sitemap.xml). Postbuild validated502internal references and all19page JS/CSS budgets; updated `docs/evidence/bundle.json` records this release build. The existing chart dependency still emits Vite's minified chunk-size advisory; the measured compressed tool scripts remain below their450KiB budget. No remote upload, commit or deployment was performed by this local build step.
+
+## Earlier development record
+
+Latest revision: 1.0.1. Owner explicitly corrected display name to 喻锦权. Profile, defaultmeta, accessiblebrandlabel, home/aboutmonograms, favicon and jinquantheme namespace updated. Current19HTML/39asset identityscan, check/lint/107unit/44Chromiumbrowserchecks(30E2E+14axe), basepath/publicbuildchecks passed. Screenshots and print evidence refreshed. Current archives use Jinquan-Space-v1.0.1 names. Original engineering directory name is retained to preserve existing local paths. No publication authorization inferred from the name correction.
+
+2026-10-15: V1 local development delivered. All19HTML routes and documented browser-local functionality implemented. Final npm run verify exited0: strictcheck0errors/0warnings/0hints,lint,format,107unit,30ChromiumE2E,14axe,basepath,publicmode,links,budgets. Clean npmci and build succeeded;39dist files byte-identical to main build. Dev/preview each returnedHTTP200.
+
+WebKit27.2 passed9smoke checks. Firefox157 downloaded but Windows14001/mozglueSideBySide launch failure blocks validation; diagnostic evidence retained. Truephone/native200%zoom/screenreader/realIME/network/GitHubrunner/onlineheaders remain unexecuted, as TEST_REPORT explains.
+
+Screenshots were opened, defects fixed and rechecked; short/long print reviewed1/2pages. Source and static preview archives prepared without node_modules/.env/privateinputs/testvideos. At that earlier delivery stage, no repository was overwritten and no push/deployment/DNS/account creation had occurred; official profile was unapproved,false. The public release preparation record above supersedes that approval/repository status. Continue by reading HANDOFF and TEST_REPORT; do not redo verified modules without new evidence.

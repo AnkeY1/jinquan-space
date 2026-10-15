@@ -1,0 +1,25 @@
+{
+  "summary": "关注电子工程、嵌入式系统与数据处理。本站提供三个可实际体验的演示项目，作为技术方向与实现方式的展示。",
+  "education": [],
+  "experience": [],
+  "projects": [
+    {
+      "title": "日志时间差分析器",
+      "description": "本站演示项目：浏览器本地解析、分段比较、保留负差值。",
+      "path": "/projects/log-analyzer/"
+    },
+    {
+      "title": "浏览器数据绘图器",
+      "description": "本站演示项目：CSV/TSV 选列绘图、缺失值断点与统计导出。",
+      "path": "/projects/csv-plotter/"
+    },
+    {
+      "title": "交互式信号实验室",
+      "description": "本站演示项目：双音信号、确定性噪声与单边幅度谱。",
+      "path": "/projects/signal-studio/"
+    }
+  ],
+  "publications": [],
+  "patents": [],
+  "awards": []
+}

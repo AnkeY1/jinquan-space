@@ -1,0 +1,134 @@
+{
+  "checkedAt": "2026-10-15T07:29:51.788Z",
+  "baseURL": "http://127.0.0.1:4321",
+  "environment": {
+    "platform": "win32",
+    "node": "v24.19.0",
+    "architecture": "x64",
+    "cpu": "12th Gen Intel(R) Core(TM) i9-12900H",
+    "headless": true
+  },
+  "scope": "Production static-site smoke; desktop 1280x800 and mobile 390x844, local synthetic examples only.",
+  "browsers": [
+    {
+      "name": "firefox",
+      "status": "failed",
+      "version": null,
+      "installedBuild": {
+        "version": "157.0",
+        "revision": "1555"
+      },
+      "checks": [],
+      "downloads": [],
+      "pageErrors": [],
+      "screenshots": [],
+      "error": "browserType.launch: spawn UNKNOWN\nCall log:\n\u001b[2m  - <launching> <USER_HOME>\\AppData\\Local\\ms-playwright\\firefox-1555\\firefox\\firefox.exe -no-remote -headless -profile <USER_HOME>\\AppData\\Local\\Temp\\playwright_firefoxdev_profile-OyhXNv -juggler-pipe -silent\u001b[22m\n"
+    },
+    {
+      "name": "webkit",
+      "status": "passed",
+      "version": "27.2",
+      "installedBuild": {
+        "version": "27.2",
+        "revision": "2370"
+      },
+      "checks": [
+        {
+          "title": "home content and light-theme screenshot",
+          "status": "passed",
+          "elapsedMs": 587
+        },
+        {
+          "title": "article body, table of contents and local navigation",
+          "status": "passed",
+          "elapsedMs": 191
+        },
+        {
+          "title": "mobile menu, Escape focus and 390px overflow",
+          "status": "passed",
+          "elapsedMs": 559
+        },
+        {
+          "title": "theme changes persist through refresh",
+          "status": "passed",
+          "elapsedMs": 167
+        },
+        {
+          "title": "Chinese search and hash restoration",
+          "status": "passed",
+          "elapsedMs": 289
+        },
+        {
+          "title": "log example calculation, original CSV and PNG",
+          "status": "passed",
+          "elapsedMs": 769
+        },
+        {
+          "title": "CSV multiline example calculation, statistics and CSV/PNG",
+          "status": "passed",
+          "elapsedMs": 1064
+        },
+        {
+          "title": "signal real computation, alias preset and CSV/PNG",
+          "status": "passed",
+          "elapsedMs": 2199
+        },
+        {
+          "title": "no uncaught browser exceptions",
+          "status": "passed",
+          "elapsedMs": 0
+        }
+      ],
+      "downloads": [
+        {
+          "selector": "#log-export-a",
+          "filename": "log-a-intervals.csv",
+          "type": "csv",
+          "bytes": 373,
+          "signatureHex": "efbbbf"
+        },
+        {
+          "selector": "[data-png=\"a\"]",
+          "filename": "log-a.png",
+          "type": "png",
+          "bytes": 45119,
+          "signatureHex": "89504e470d0a1a0a"
+        },
+        {
+          "selector": "#csv-export",
+          "filename": "csv-processed-data.csv",
+          "type": "csv",
+          "bytes": 90,
+          "signatureHex": "efbbbf"
+        },
+        {
+          "selector": "#csv-png",
+          "filename": "csv-plot.png",
+          "type": "png",
+          "bytes": 39339,
+          "signatureHex": "89504e470d0a1a0a"
+        },
+        {
+          "selector": "#signal-export-time",
+          "filename": "signal-time-synthetic.csv",
+          "type": "csv",
+          "bytes": 37290,
+          "signatureHex": "efbbbf"
+        },
+        {
+          "selector": "#signal-export-image",
+          "filename": "signal-spectrum-synthetic.png",
+          "type": "png",
+          "bytes": 22610,
+          "signatureHex": "89504e470d0a1a0a"
+        }
+      ],
+      "pageErrors": [],
+      "screenshots": [
+        "docs/evidence/webkit-smoke.png",
+        "docs/evidence/webkit-mobile-menu.png",
+        "docs/evidence/webkit-signal-smoke.png"
+      ]
+    }
+  ]
+}

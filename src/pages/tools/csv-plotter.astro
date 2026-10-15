@@ -1,0 +1,378 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import ToolShell from '../../components/ToolShell.astro';
+import FilePicker from '../../components/FilePicker.astro';
+import ProcessingStatus from '../../components/ProcessingStatus.astro';
+import FieldError from '../../components/FieldError.astro';
+import StatGrid from '../../components/StatGrid.astro';
+import ChartPanel from '../../components/ChartPanel.astro';
+import ResultTable from '../../components/ResultTable.astro';
+import ExportActions from '../../components/ExportActions.astro';
+import PrivacyNote from '../../components/PrivacyNote.astro';
+import { withBase } from '../../lib/url';
+---
+
+<Layout
+  title="CSV / TSV 数据绘图器"
+  description="浏览器本地解析 CSV 和 TSV，选择数值列、查看统计、保留缺失断点，并导出图表与数据。"
+>
+  <div class="page">
+    <section class="page-heading">
+      <p class="eyebrow">TOOLS / 02 · 浏览器本地处理</p>
+      <h1>
+        CSV / TSV <span class="csv-h1-tail">数据绘图器</span>
+      </h1>
+      <p class="lead">让数据成为曲线，保留每一个真实断点。</p>
+      <PrivacyNote>
+        文件仅在当前页面内存中处理，不上传、不写入浏览器存储。支持逗号、制表符和分号。
+      </PrivacyNote>
+    </section>
+    <div id="csv-app" data-sample={withBase('/samples/csv-sample-data.csv')}>
+      <ToolShell>
+        <div slot="sidebar" class="stack">
+          <section class="panel stack" aria-labelledby="csv-input-heading">
+            <h2 id="csv-input-heading">01 / 输入数据</h2>
+            <FilePicker
+              id="csv-file"
+              dropId="csv-drop"
+              label="选择 CSV / TSV 文件"
+              accept=".csv,.tsv,.txt,text/csv,text/tab-separated-values"
+              help="也可以拖拽文件到这里 · 最大 10 MiB"
+            />
+            <p id="csv-filename" class="muted">
+              尚未选择文件
+            </p>
+            <div class="csv-actions">
+              <button id="csv-sample" class="button" type="button">
+                使用示例
+              </button>
+              <a class="button" href={withBase('/samples/csv-sample-data.csv')} download>
+                下载示例
+              </a>
+            </div>
+            <label class="csv-checkbox">
+              <input id="csv-header" type="checkbox" checked />
+              首行作为表头
+            </label>
+            <label class="field" for="csv-delimiter">
+              分隔符
+            </label>
+            <select id="csv-delimiter">
+              <option value="auto">自动检测</option>
+              <option value=",">逗号 ,</option>
+              <option value="tab">制表符 Tab</option>
+              <option value=";">分号 ;</option>
+            </select>
+            <details>
+              <summary>高级设置</summary>
+              <div class="stack">
+                <label class="field" for="csv-encoding">
+                  文件编码
+                </label>
+                <select id="csv-encoding">
+                  <option value="utf-8">UTF-8（默认）</option>
+                  <option value="gb18030">GB18030</option>
+                </select>
+                <p class="muted">严格按所选编码解码，不自动猜测。UTF-8 BOM 可识别。</p>
+              </div>
+            </details>
+            <div class="csv-actions">
+              <button id="csv-start" class="button primary" type="button" disabled>
+                开始处理
+              </button>
+              <button id="csv-cancel" class="button" type="button" disabled>
+                取消
+              </button>
+              <button id="csv-clear" class="button" type="button">
+                清空
+              </button>
+            </div>
+            <ProcessingStatus
+              id="csv-status"
+              initial="等待文件，也可以先使用合成示例。"
+              progressId="csv-progress"
+              progressLabel="CSV 解析进度"
+            />
+          </section>
+          <section
+            id="csv-selection"
+            class="panel stack"
+            hidden
+            aria-labelledby="csv-columns-heading"
+          >
+            <h2 id="csv-columns-heading">02 / 绘图设置</h2>
+            <label class="field" for="csv-x">
+              横轴 X
+            </label>
+            <select id="csv-x">
+              <option value="row">数据行序号（从 1 开始）</option>
+            </select>
+            <fieldset aria-describedby="csv-selection-error">
+              <legend>纵轴 Y（选择 1～4 列）</legend>
+              <div id="csv-ys" class="stack"></div>
+              <FieldError id="csv-selection-error" />
+            </fieldset>
+            <p class="muted">
+              共用一个 Y 轴，请选择可比较的量纲。日期不会自动解释，可用行序号作为横轴。
+            </p>
+            <label class="field" for="csv-title">
+              图标题
+            </label>
+            <input id="csv-title" maxlength="100" value="CSV 数据曲线" />
+            <div class="csv-two-fields">
+              <div>
+                <label class="field" for="csv-x-name">
+                  X 轴名称
+                </label>
+                <input id="csv-x-name" maxlength="60" value="数据行序号" />
+              </div>
+              <div>
+                <label class="field" for="csv-x-unit">
+                  X 单位
+                </label>
+                <input id="csv-x-unit" maxlength="30" placeholder="可选" />
+              </div>
+            </div>
+            <div class="csv-two-fields">
+              <div>
+                <label class="field" for="csv-y-name">
+                  Y 轴名称
+                </label>
+                <input id="csv-y-name" maxlength="60" value="数值" />
+              </div>
+              <div>
+                <label class="field" for="csv-y-unit">
+                  Y 单位
+                </label>
+                <input id="csv-y-unit" maxlength="30" placeholder="可选" />
+              </div>
+            </div>
+          </section>
+        </div>
+        <div class="stack">
+          <section id="csv-empty" class="panel csv-empty">
+            <span aria-hidden="true">↗</span>
+            <h2>从一份数据开始</h2>
+            <p class="muted">
+              示例包含中文表头、引号转义、单元格换行与缺失值。点击“使用示例”，直接查看完整处理结果。
+            </p>
+            <p class="muted">最多 100,000 行 · 100 列 · 2,000,000 个单元格</p>
+          </section>
+          <div id="csv-result" class="stack" hidden>
+            <p id="csv-stale" class="status" hidden>
+              结果已过期，请重新分析。当前图表仅供参考，导出已停用。
+            </p>
+            <section class="panel stack" aria-labelledby="csv-summary-heading">
+              <h2 id="csv-summary-heading">数据概览</h2>
+              <StatGrid id="csv-summary" />
+              <details>
+                <summary>前 20 行原始文本预览</summary>
+                <ResultTable id="csv-preview" label="前 20 行原始 CSV 文本" />
+              </details>
+            </section>
+            <ChartPanel title="03 / 数据曲线" titleId="csv-chart-heading">
+              <button slot="actions" id="csv-reset" class="button" type="button">
+                重置视图
+              </button>
+              <p id="csv-warning" class="status" hidden></p>
+              <div
+                id="csv-chart"
+                class="chart"
+                role="img"
+                aria-label="所选 CSV 数据曲线；完整数值可在下方表格查看"
+              ></div>
+              <p id="csv-display-note" class="muted"></p>
+              <ExportActions>
+                <button id="csv-png" class="button" type="button" disabled>
+                  导出 PNG
+                </button>
+                <button id="csv-export" class="button primary" type="button" disabled>
+                  导出处理后的 CSV
+                </button>
+                <button id="csv-issues-export" class="button" type="button" disabled>
+                  导出问题记录
+                </button>
+              </ExportActions>
+              <p class="muted">
+                导出按当前选列生成，缺失值留空；不是原文件复制。图例可显隐曲线，统计仍涵盖当前选列的完整有效记录。
+              </p>
+            </ChartPanel>
+            <section class="panel stack" aria-labelledby="csv-stats-heading">
+              <h2 id="csv-stats-heading">完整数据统计</h2>
+              <p class="muted">
+                仅统计 X 有效且该 Y 有效的记录。总体标准差使用 n 为分母，缩放和图例显隐不改变统计。
+              </p>
+              <ResultTable id="csv-stats" label="所选 CSV 数值列的完整统计" />
+            </section>
+            <section class="panel stack" aria-labelledby="csv-table-heading">
+              <h2 id="csv-table-heading">04 / 数据记录</h2>
+              <div class="csv-actions">
+                <label for="csv-table-view">显示内容</label>
+                <select id="csv-table-view">
+                  <option value="numeric">解析值（空值显示 —）</option>
+                  <option value="raw">原始文本</option>
+                </select>
+                <label for="csv-page-size">每页</label>
+                <select id="csv-page-size">
+                  <option value="50">50 行</option>
+                  <option value="100">100 行</option>
+                </select>
+              </div>
+              <ResultTable id="csv-table" label="CSV 分页记录" />
+              <div class="csv-actions">
+                <button id="csv-prev" class="button" type="button">
+                  上一页
+                </button>
+                <span id="csv-page" class="muted"></span>
+                <button id="csv-next" class="button" type="button">
+                  下一页
+                </button>
+              </div>
+            </section>
+            <section class="panel stack">
+              <details>
+                <summary id="csv-issue-summary">问题记录</summary>
+                <p class="muted">
+                  页面最多显示前 200
+                  条。导出包含当前选列的全部问题，以及列数不匹配的行。行号指原文件物理行。
+                </p>
+                <ResultTable id="csv-issues" label="CSV 问题记录" />
+              </details>
+            </section>
+          </div>
+        </div>
+      </ToolShell>
+    </div>
+    <section class="panel tool-help">
+      <h2>格式与计算说明</h2>
+      <p>
+        支持十进制和科学计数法，如 -0.4、.5、2.、1.2e-3。空字符串、12abc、Infinity、0x10
+        和不能精确表示的大整数均不参与数值计算。缺失的 Y 只打断对应曲线；无效 X
+        使该行全部曲线不可绘制。
+      </p>
+      <p>
+        数据始终按原始行顺序连接，不自动排序或填零。列数不匹配的行被排除并列入问题记录；未闭合引号会终止处理。较大文件建议在电脑使用。清空或离开页面后释放本页持有的数据引用。
+      </p>
+      <p>
+        文本导出会对危险公式前缀添加单引号保护，普通负数仍为数值。CSV
+        不携带强类型保证，防护不保证所有电子表格软件、导入方式及二次保存后的行为。
+      </p>
+      <p class="muted">本站合成示例用于演示文件处理与缺失值口径，不代表实测数据。</p>
+    </section>
+    <noscript>
+      <p class="status">计算需要启用 JavaScript。上方格式、限制与隐私说明仍可阅读。</p>
+    </noscript>
+  </div>
+</Layout>
+<script>
+  import '../../scripts/csv-plotter';
+</script>
+<style>
+  .csv-h1-tail {
+    white-space: nowrap;
+  }
+  .csv-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .csv-two-fields {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 10px;
+  }
+  .csv-two-fields input {
+    min-width: 0;
+    width: 100%;
+  }
+  .csv-checkbox {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    min-height: 44px;
+  }
+  .csv-empty {
+    padding: clamp(28px, 6vw, 72px);
+    text-align: center;
+    min-height: 440px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .csv-empty > span {
+    font-size: 64px;
+    color: var(--accent);
+  }
+  #csv-filename {
+    overflow-wrap: anywhere;
+  }
+  fieldset {
+    border: 0;
+    padding: 0;
+    margin: 0;
+    min-width: 0;
+  }
+  legend {
+    font-weight: 650;
+    margin-bottom: 12px;
+  }
+  .tool-help {
+    margin-top: 32px;
+  }
+  .tool-help p {
+    max-width: 78ch;
+  }
+  .page-heading {
+    margin-bottom: 32px;
+  }
+  #csv-chart {
+    min-height: 360px;
+  }
+  #csv-app :global(th),
+  #csv-app :global(td) {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    min-width: 88px;
+    max-width: 300px;
+  }
+  #csv-app :global(.csv-y-option) {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    min-height: 44px;
+    overflow-wrap: anywhere;
+  }
+  #csv-app :global(.csv-y-option input) {
+    margin-top: 5px;
+  }
+  #csv-app :global(.csv-y-option small) {
+    display: block;
+    font-size: 12px;
+    line-height: 1.6;
+  }
+  #csv-app :global(.csv-y-option label) {
+    cursor: pointer;
+  }
+  #csv-app :global(.stat strong) {
+    display: block;
+  }
+  #csv-app [hidden] {
+    display: none !important;
+  }
+  #csv-app select,
+  #csv-app input:not([type='checkbox']) {
+    max-width: 100%;
+  }
+  @media (max-width: 500px) {
+    #csv-chart {
+      min-height: 320px;
+    }
+    .csv-empty {
+      min-height: 320px;
+    }
+    .csv-two-fields {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -1,0 +1,48 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { withBase } from '../lib/url';
+---
+
+<Layout title="页面未找到" noindex>
+  <section class="page not-found">
+    <span class="error-code mono">404</span>
+    <h1>这条路径，还没有作品。</h1>
+    <p>页面可能已移动，或地址有一点偏差。回到首页，继续探索。</p>
+    <div class="button-row">
+      <a class="button primary" href={withBase('/')}>
+        返回首页
+      </a>
+      <a class="button" href={withBase('/search/')}>
+        站内搜索 ↗
+      </a>
+    </div>
+  </section>
+</Layout>
+<style>
+  .not-found {
+    padding-top: 85px;
+    padding-bottom: 100px;
+    max-width: 800px;
+    margin: auto;
+  }
+  .error-code {
+    font-size: 14px;
+    color: var(--accent);
+    letter-spacing: 0.16em;
+  }
+  .not-found h1 {
+    margin: 22px 0;
+  }
+  .not-found p {
+    color: var(--muted);
+    margin-bottom: 28px;
+  }
+  @media (max-width: 760px) {
+    .not-found {
+      padding: 60px 0;
+    }
+    .not-found h1 {
+      font-size: 29px;
+    }
+  }
+</style>

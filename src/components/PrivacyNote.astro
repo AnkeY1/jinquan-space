@@ -1,0 +1,10 @@
+---
+interface Props {
+  compact?: boolean;
+}
+const { compact = false } = Astro.props;
+---
+
+<p class:list={['muted', compact && 'privacy-note']}>
+  <slot>文件仅在当前页面内存中处理，不上传、不写入浏览器存储。</slot>
+</p>

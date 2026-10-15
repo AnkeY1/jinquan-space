@@ -1,0 +1,59 @@
+{
+  "date": "2026-10-15",
+  "aggregateVerify": {
+    "exitCode": 0,
+    "commands": [
+      "check",
+      "lint",
+      "format:check",
+      "test:unit",
+      "build",
+      "test:e2e",
+      "test:basepath",
+      "test:public",
+      "test:a11y",
+      "test:links",
+      "test:bundle"
+    ],
+    "version": "1.0.0"
+  },
+  "unit": 107,
+  "chromiumE2E": 30,
+  "axeScans": 14,
+  "webkitSmoke": 9,
+  "firefox": "launch blocked by Windows SideBySide configuration",
+  "cleanInstall": {
+    "command": "npm ci",
+    "exitCode": 0,
+    "buildExitCode": 0,
+    "distByteEquality": true,
+    "files": 39,
+    "version": "1.0.0"
+  },
+  "runtimeSmoke": {
+    "devStatus": 200,
+    "previewStatus": 200
+  },
+  "profileApproved": false,
+  "currentRevision": {
+    "version": "1.0.1",
+    "displayName": "喻锦权",
+    "profileApproved": false,
+    "htmlIdentityScan": 19,
+    "builtAssetOldNameScan": 39,
+    "typeErrors": 0,
+    "typeWarnings": 0,
+    "lint": "passed",
+    "unit": 107,
+    "chromiumE2E": 30,
+    "axeScans": 14,
+    "basepath": "passed",
+    "publicBuild": "passed",
+    "links": 502,
+    "bundleBudget": "passed",
+    "screenshots": "refreshed and opened",
+    "printPages": [1, 2],
+    "webkitSmoke": 9,
+    "firefox": "unchanged Windows launch blocker"
+  }
+}
