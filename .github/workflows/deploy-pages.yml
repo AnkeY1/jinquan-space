@@ -1,0 +1,146 @@
+name: Publish approved site to GitHub Pages
+
+# Publishing is always an explicit human action; pushes and CI never trigger it.
+on:
+  workflow_dispatch:
+    inputs:
+      publish_confirmed:
+        description: 'I authorize publishing this approved revision to the configured public URL.'
+        required: true
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    if: github.repository == 'AnkeY1/jinquan-space' && github.ref_name == github.event.repository.default_branch
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    permissions:
+      contents: write
+      pages: read
+    env:
+      SITE_MODE: public
+      SITE_ORIGIN: ${{ vars.SITE_ORIGIN || 'https://ankey1.github.io' }}
+      SITE_BASE: ${{ vars.SITE_BASE || '/jinquan-space/' }}
+      PUBLISH_CONFIRMED: ${{ inputs.publish_confirmed }}
+      ASTRO_TELEMETRY_DISABLED: '1'
+    steps:
+      - name: Require explicit publication before repository changes
+        run: |
+          if [ "$PUBLISH_CONFIRMED" != 'true' ]; then
+            echo 'Publication was not confirmed.' >&2
+            exit 1
+          fi
+      - name: Check out approved source
+        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
+        with:
+          persist-credentials: true
+      - name: Restore first-release source archive
+        if: ${{ hashFiles('source-upload.zip') != '' }}
+        run: |
+          python3 <<'PY'
+          from pathlib import Path, PurePosixPath, PureWindowsPath
+          import shutil
+          import stat
+          import zipfile
+
+          root = Path.cwd().resolve()
+          archive_path = root / 'source-upload.zip'
+          pending = []
+          seen = set()
+          with zipfile.ZipFile(archive_path) as archive:
+              for entry in archive.infolist():
+                  name = entry.filename
+                  path = PurePosixPath(name)
+                  if (
+                      not path.parts
+                      or path.is_absolute()
+                      or PureWindowsPath(name).drive
+                      or '\\' in name
+                      or '..' in path.parts
+                      or path.parts[0] == '.git'
+                      or path.as_posix() == 'source-upload.zip'
+                  ):
+                      raise ValueError(f'Unsafe archive path: {name!r}')
+                  mode = entry.external_attr >> 16
+                  if stat.S_IFMT(mode) not in (0, stat.S_IFREG, stat.S_IFDIR):
+                      raise ValueError(f'Unsupported archive entry: {name!r}')
+                  target = root.joinpath(*path.parts)
+                  if not target.resolve().is_relative_to(root):
+                      raise ValueError(f'Archive path escapes checkout: {name!r}')
+                  if path.parts[:2] == ('.github', 'workflows'):
+                      continue
+                  if path.as_posix() in seen:
+                      raise ValueError(f'Duplicate archive path: {name!r}')
+                  seen.add(path.as_posix())
+                  pending.append((entry, target))
+              for entry, target in pending:
+                  if entry.is_dir():
+                      target.mkdir(parents=True, exist_ok=True)
+                  else:
+                      target.parent.mkdir(parents=True, exist_ok=True)
+                      with archive.open(entry) as source, target.open('wb') as output:
+                          shutil.copyfileobj(source, output)
+          archive_path.unlink()
+          print(f'Restored {len(pending)} source entries; workflow files were preserved.')
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add --all -- . ':!.github/workflows/**'
+          if ! git diff --cached --quiet; then
+            git commit -m 'Restore approved website source from initial upload'
+            git push origin "HEAD:${GITHUB_REF_NAME}"
+          fi
+      - name: Set up Node.js
+        uses: actions/setup-node@2028fbc5c25fe9cf00d9f06a71cc4710d4507903 # v6.0.0
+        with:
+          node-version: 24.19.0
+          cache: npm
+      - name: Require explicit publication and profile approval
+        run: |
+          node --input-type=module <<'NODE'
+          import { readFileSync } from 'node:fs';
+          if (process.env.PUBLISH_CONFIRMED !== 'true') throw new Error('Publication was not confirmed.');
+          const profile = JSON.parse(readFileSync('src/data/profile.json', 'utf8'));
+          if (profile.publicProfileApproved !== true) throw new Error('The owner has not approved the public profile.');
+          if (!process.env.SITE_ORIGIN || !process.env.SITE_BASE) throw new Error('Configure repository variables SITE_ORIGIN and SITE_BASE first.');
+          const origin = new URL(process.env.SITE_ORIGIN);
+          if (origin.protocol !== 'https:' || origin.origin !== process.env.SITE_ORIGIN) throw new Error('SITE_ORIGIN must be an HTTPS origin without a path.');
+          NODE
+      - name: Install locked dependencies
+        run: npm ci
+      - name: Validate source
+        run: |
+          npm run check
+          npm run lint
+          npm run format:check
+          npm run test:unit
+      - name: Configure existing GitHub Pages site
+        uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5.0.0
+      - name: Build approved public artifact
+        run: npm run build
+      - name: Upload static public artifact
+        uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b # v4.0.0
+        with:
+          path: dist
+  deploy:
+    needs: build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Publish the approved artifact
+        id: deployment
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4.0.5
