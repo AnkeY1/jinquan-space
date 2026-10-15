@@ -1,0 +1,24 @@
+[
+  {
+    "id": 38704918528,
+    "name": "Validate static site",
+    "head_sha": "61e943225093ab60986769962c741d1de06e8e6c",
+    "status": "completed",
+    "conclusion": "success",
+    "html_url": "https://github.com/AnkeY1/jinquan-space/actions/runs/38704918528",
+    "event": "push",
+    "created_at": "2026-10-15T08:20:09Z",
+    "updated_at": "2026-10-15T08:22:24Z"
+  },
+  {
+    "id": 38704126532,
+    "name": "Publish approved site to GitHub Pages",
+    "head_sha": "15ce83f98381352d92fd1b11482f419865acdb28",
+    "status": "completed",
+    "conclusion": "success",
+    "html_url": "https://github.com/AnkeY1/jinquan-space/actions/runs/38704126532",
+    "event": "workflow_dispatch",
+    "created_at": "2026-10-15T08:13:23Z",
+    "updated_at": "2026-10-15T08:14:26Z"
+  }
+]

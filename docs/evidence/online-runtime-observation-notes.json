@@ -1,0 +1,17 @@
+{
+  "source": "Parent agent reported direct CUA observations of the published website; this audit agent did not independently repeat them.",
+  "publicURL": "https://ankey1.github.io/jinquan-space/tools/log-analyzer/",
+  "logExample": {
+    "canvasCount": 3,
+    "aMean": 350,
+    "negativeAValue": -900,
+    "positiveAValue": 2100,
+    "comparisonMean": 6.4,
+    "result": "Parent confirmed these online example results."
+  },
+  "onlineDownloadCapture": {
+    "result": "not verified",
+    "reason": "Two CUA download-event attempts timed out.",
+    "reportingLimit": "Do not claim that an online browser download event or downloaded file was captured successfully. Existing local E2E export tests passed separately."
+  }
+}

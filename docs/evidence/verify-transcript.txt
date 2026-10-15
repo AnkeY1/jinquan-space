@@ -7,7 +7,7 @@ npm notice run astro check
 15:15:53 [content] Syncing content
 15:15:53 [content] Synced content
 15:15:53 [types] Generated 599ms
-15:15:53 [check] Getting diagnostics for Astro files in <WORKSPACE>\outputs\ziheng-space...
+15:15:53 [check] Getting diagnostics for Astro files in <PROJECT_ROOT>...
 Result (86 files): 
 - 0 errors
 - 0 warnings
@@ -28,7 +28,7 @@ Verification: test:unit
 npm notice run ziheng-space@1.0.0 test:unit
 npm notice run vitest run
 
- RUN  v5.0.4 <WORKSPACE>/outputs/ziheng-space
+ RUN  v5.0.4 <PROJECT_ROOT>
 
 
  Test Files  5 passed (5)
@@ -48,7 +48,7 @@ npm notice run astro build
 15:16:07 [types] Generated 545ms
 15:16:07 [build] output: "static"
 15:16:07 [build] mode: "static"
-15:16:07 [build] directory: <WORKSPACE>\outputs\ziheng-space\dist\
+15:16:07 [build] directory: <PROJECT_ROOT>\dist\
 15:16:07 [build] Collecting build info...
 15:16:07 [build] ✓ Completed in 591ms.
 15:16:07 [build] Building static entrypoints...

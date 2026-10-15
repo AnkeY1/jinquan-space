@@ -1,0 +1,115 @@
+[
+  {
+    "name": "validate",
+    "status": "completed",
+    "conclusion": "success",
+    "html_url": "https://github.com/AnkeY1/jinquan-space/actions/runs/38704918528/job/116321834681",
+    "steps": [
+      {
+        "name": "Set up job",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "name": "Check out source",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "name": "Set up Node.js",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "name": "Install locked dependencies",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "name": "Install Chromium and system dependencies",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "name": "Install Chinese screenshot fonts",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "name": "Check types",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "name": "Lint",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "name": "Check formatting",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "name": "Test pure algorithms",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "name": "Build preview and inspect generated assets",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "name": "Test browser journeys",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "name": "Test automated accessibility",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "name": "Test subpath deployment",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "name": "Test isolated public build and approval gate",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "name": "Check generated links",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "name": "Check resource budgets",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "name": "Preserve synthetic test evidence",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "name": "Post Set up Node.js",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "name": "Post Check out source",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "name": "Complete job",
+        "status": "completed",
+        "conclusion": "success"
+      }
+    ]
+  }
+]
