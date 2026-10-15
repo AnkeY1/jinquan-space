@@ -1,0 +1,81 @@
+{
+  "version": "1.1.0",
+  "date": "2026-10-15",
+  "timezone": "Asia/Shanghai",
+  "status": "locally_verified_awaiting_publication",
+  "newRemoteCiVerified": false,
+  "newDeploymentVerified": false,
+  "checks": {
+    "astroCheck": "passed",
+    "eslint": "passed",
+    "prettier": "passed",
+    "unit": { "passed": 107, "total": 107 },
+    "e2e": {
+      "casesWithPassingResults": 30,
+      "initialRun": { "passed": 29, "failed": 1, "total": 30 },
+      "targetedRerun": {
+        "passed": 1,
+        "total": 1,
+        "case": "article TOC copy exact code and resume print pagination",
+        "change": "Replace DOM-height-doubling assumption with actual PDF page-count comparison; the synthetic long PDF must have more pages than the original."
+      },
+      "fullSuiteRerun": false,
+      "aggregateVerifyRerun": false
+    },
+    "accessibility": {
+      "passed": 16,
+      "total": 16,
+      "themes": ["light", "dark"],
+      "aboutIncluded": true,
+      "aboutNativeDetailsExpanded": true,
+      "testedRuleViolations": 0
+    },
+    "basepath": { "exitCode": 0, "base": "/portfolio/" },
+    "publicMode": {
+      "exitCode": 0,
+      "isolatedFixture": true,
+      "originalProfileBytesUnchanged": true,
+      "originalResumeBytesUnchanged": true,
+      "approvalGateAndVisibilityFiltering": "passed",
+      "invalidDateSlugAndRelatedProjectRejection": "passed"
+    },
+    "releaseBuild": {
+      "exitCode": 0,
+      "mode": "public",
+      "origin": "https://ankey1.github.io",
+      "base": "/jinquan-space/",
+      "htmlPages": 19,
+      "files": 116,
+      "approximateMiB": 8.1,
+      "validatedReferences": 521,
+      "links": "passed",
+      "allJsCssBudgets": "passed"
+    }
+  },
+  "visualReview": {
+    "method": "CUA screenshots reviewed by the primary agent",
+    "viewportWidthsCssPx": [1280, 390],
+    "horizontalOverflowObserved": false,
+    "experimentalPhotoRotation": {
+      "files": ["fpga-debug.webp", "million-fbg-experiment.webp"],
+      "displayRotationDegrees": -90,
+      "visuallyCorrect": true
+    }
+  },
+  "photoPreparation": {
+    "ownerSuppliedWebpCount": 13,
+    "metadataRemoval": "checked by the asset-processing agent; not repeated for this summary",
+    "originalSuppliedFilesPublished": false
+  },
+  "sourceLogs": {
+    "location": "task-local workspace work directory; not included as public site assets",
+    "files": [
+      "profile-verify-transcript.txt",
+      "profile-print-test.txt",
+      "profile-a11y.txt",
+      "profile-base.txt",
+      "profile-public.txt",
+      "profile-public-build.txt"
+    ]
+  }
+}

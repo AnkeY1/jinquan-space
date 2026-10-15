@@ -110,7 +110,7 @@ test('project/article filters back-forward URLs', async ({ page }) => {
   await page.goto('/articles/?tag=FFT');
   await expect(page.locator('#filtered-content article:visible')).toHaveCount(1);
 });
-test('article TOC copy exact code and resume print template', async ({ page }) => {
+test('article TOC copy exact code and resume print pagination', async ({ page }) => {
   await page.goto('/articles/log-time-difference/');
   const toc = page.getByRole('navigation', { name: '本文目录' });
   await toc.getByRole('link', { name: '负差值提供了什么信息' }).click();
@@ -142,7 +142,7 @@ test('article TOC copy exact code and resume print template', async ({ page }) =
   await expect(page.locator('.resume-disclaimer')).toBeVisible();
   await expect(page.locator('.site-header')).not.toBeVisible();
   mkdirSync('test-results/print', { recursive: true });
-  await page.pdf({
+  const shortPdf = await page.pdf({
     path: 'test-results/print/resume-short.pdf',
     format: 'A4',
     printBackground: true,
@@ -165,12 +165,18 @@ test('article TOC copy exact code and resume print template', async ({ page }) =
   });
   expect(
     await page.locator('.resume-page').evaluate((e) => e.getBoundingClientRect().height),
-  ).toBeGreaterThan(shortHeight * 2);
-  await page.pdf({
+  ).toBeGreaterThan(shortHeight);
+  const longPdf = await page.pdf({
     path: 'test-results/print/resume-long.pdf',
     format: 'A4',
     printBackground: true,
   });
+  // Chromium emits each printed page as an uncompressed /Type /Page object.
+  // Compare pagination directly so this remains valid as the real resume grows.
+  const pageCount = (pdf: Buffer) =>
+    pdf.toString('latin1').match(/\/Type\s*\/Page\b/g)?.length ?? 0;
+  expect(pageCount(shortPdf)).toBeGreaterThan(0);
+  expect(pageCount(longPdf)).toBeGreaterThan(pageCount(shortPdf));
   writeFileSync(
     'test-results/print/note.txt',
     'Synthetic DOM entries only. No profile file was modified.',

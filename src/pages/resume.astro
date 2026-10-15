@@ -42,6 +42,7 @@ const isResumeTemplate = [
           <a href={`mailto:${profile.contactEmail}`}>{profile.contactEmail}</a>
         </p>
       )}
+      {profile.wechatId && <p>微信：{profile.wechatId}</p>}
       {profile.location && <p>{profile.location}</p>}
     </header>
     {(isResumeTemplate || !profile.publicProfileApproved || __SITE_MODE__ === 'preview') && (
@@ -71,7 +72,7 @@ const isResumeTemplate = [
     )}
     {resume.experience.length > 0 && (
       <section>
-        <h2>经历</h2>
+        <h2>研究与开发经历</h2>
         {resume.experience.map((e) => (
           <div class="resume-item">
             <h3>{e.title}</h3>

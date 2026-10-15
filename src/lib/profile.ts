@@ -16,6 +16,8 @@ export const profile = z
     phone: z.string().nullable(),
     location: z.string().nullable(),
     githubUrl: https.nullable(),
+    wechatId: z.string().min(1).nullable(),
+    hobbies: z.array(z.string().min(1)),
     socialLinks: z.array(z.object({ label: z.string(), url: https })),
     resumePdfPath: logical.nullable(),
     publicProfileApproved: z.boolean(),

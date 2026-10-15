@@ -1,5 +1,5 @@
 {
-  "totalBytes": 1121576,
+  "totalBytes": 8495683,
   "report": [
     {
       "route": "404.html",
@@ -11,7 +11,7 @@
     {
       "route": "about/index.html",
       "jsGzipKiB": 0.77,
-      "cssGzipKiB": 4.16,
+      "cssGzipKiB": 5.84,
       "jsBudgetKiB": 90,
       "pass": true
     },

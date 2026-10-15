@@ -4,18 +4,20 @@
 
 ## 维护入口
 
-| 要修改的内容                                   | 文件                        |
-| ---------------------------------------------- | --------------------------- |
-| 姓名、首页介绍、关于页文字、联系方式与公开确认 | `src/data/profile.json`     |
-| 简历简介、教育、经历、项目与公开成果           | `src/data/resume.json`      |
-| 站名规则、首页标语、导航、简历索引开关         | `src/config/site.ts`        |
-| 项目正文及列表资料                             | `src/content/projects/*.md` |
-| 文章正文、日期、标签与参考资料                 | `src/content/articles/*.md` |
-| 工具列表文字                                   | `src/data/tools.ts`         |
-| 实验列表文字                                   | `src/data/experiments.ts`   |
-| 内容字段校验                                   | `src/content.config.ts`     |
-| 公开资料与简历字段校验                         | `src/lib/profile.ts`        |
-| 可见性过滤                                     | `src/lib/visibility.ts`     |
+| 要修改的内容                                         | 文件                        |
+| ---------------------------------------------------- | --------------------------- |
+| 姓名、首页介绍、关于页摘要、联系方式、爱好与公开确认 | `src/data/profile.json`     |
+| 关于页长故事、章节、图注、图片引用和布局             | `src/pages/about.astro`     |
+| 关于页用户提供的生活、仪表与测试照片                 | `src/assets/about/*.webp`   |
+| 简历简介、教育、经历、项目与公开成果                 | `src/data/resume.json`      |
+| 站名规则、首页标语、导航、简历索引开关               | `src/config/site.ts`        |
+| 项目正文及列表资料                                   | `src/content/projects/*.md` |
+| 文章正文、日期、标签与参考资料                       | `src/content/articles/*.md` |
+| 工具列表文字                                         | `src/data/tools.ts`         |
+| 实验列表文字                                         | `src/data/experiments.ts`   |
+| 内容字段校验                                         | `src/content.config.ts`     |
+| 公开资料与简历字段校验                               | `src/lib/profile.ts`        |
+| 可见性过滤                                           | `src/lib/visibility.ts`     |
 
 显示名和联系方式只在 `profile.json` 维护，不在简历中再保存副本。初始三个项目是本次实际开发的本站演示，不是站长既往履历。
 
@@ -27,17 +29,23 @@
 | ----------------------- | -------------------------------------------------------------- |
 | `displayName`           | 非空字符串；默认“喻锦权”                                       |
 | `intro`                 | 字符串；首页介绍                                               |
-| `about`                 | 字符串；关于页介绍                                             |
+| `about`                 | 字符串；关于页摘要，长篇经历另在 `src/pages/about.astro` 维护  |
 | `directions`            | 字符串数组；关注方向，不是能力评分                             |
 | `contactEmail`          | 有效邮箱字符串或 `null`                                        |
 | `phone`                 | 字符串或 `null`                                                |
 | `location`              | 字符串或 `null`                                                |
 | `githubUrl`             | 无账号密码的 HTTPS URL 或 `null`                               |
+| `wechatId`              | 非空字符串或 `null`；公开展示的微信号，不是二维码或登录凭据    |
+| `hobbies`               | 非空字符串组成的数组；关于页的兴趣标签，无内容时使用 `[]`      |
 | `socialLinks`           | `{ "label": "名称", "url": "HTTPS 地址" }` 数组；未配置时 `[]` |
 | `resumePdfPath`         | 站内逻辑路径或 `null`；另有下方 PDF 文件检查                   |
 | `publicProfileApproved` | 布尔值；默认 `false`，只能由站长明确确认后改变                 |
 
 学校、单位、学历、联系方式、照片、论文与获奖都需要站长提供可公开资料。不要从姓名、聊天记忆、其他磁盘项目或网络账号推断补齐。空资料可以继续留空，已有页面会隐藏对应入口。
+
+关于页的长篇经历直接维护在 `src/pages/about.astro`：电赛起点、第一次修仪表、仪表研制与现场测试、解调研究、生活与联系。章节导航与对应的 `id` 需一起更新；微信和兴趣标签仍从 `profile.json` 读取。简历保留经历摘要，修改真实经历时同步核对 `resume.json`，不要让两处出现不同的论文状态或项目口径。当前相关论文正在投稿，尚未加入 `publications`，也没有论文阅读链接。
+
+关于页照片位于 `src/assets/about/`，由页面通过静态导入和 Astro `Image` 组件生成尺寸适配的 WebP。新增或替换时同时维护导入、`alt`、图注、`width`/`sizes` 与 `docs/ASSETS.md` 来源记录；不在代码中保留原始本机文件路径。`fpga-debug.webp` 和 `million-fbg-experiment.webp` 当前由 `.rotation-frame` 中的 CSS 旋转显示；若换成方向已正确的新图，应同步移除该旋转容器，避免重复旋转。未经站长确认，不通过照片猜测人物身份或增加单位、合作关系与测试结论。
 
 上传真正获准公开的 PDF 时，先放到 `public/files/`，例如 `public/files/resume.pdf`，再把 `resumePdfPath` 设为 `/files/resume.pdf`。当前构建还要求路径符合 `/files/[英文数字下划线点横线].pdf` 且文件真实存在。文件名建议使用 `resume.pdf`；路径错误会使构建失败。未配置时只有网页打印入口，不生成假的下载。
 

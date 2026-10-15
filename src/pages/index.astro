@@ -1,5 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { Image } from 'astro:assets';
+import fieldTest from '../assets/about/field-test.webp';
 import Icon from '../components/Icon.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import ArticleRow from '../components/ArticleRow.astro';
@@ -160,15 +162,11 @@ const wave = Array.from(
       </div>
     </section>
     <section class="about-strip">
-      <div class="about-monogram" aria-hidden="true">
-        {Array.from(profile.displayName).slice(-2)[0]}
-        <br />
-        {Array.from(profile.displayName).slice(-2)[1]}
-      </div>
-      <div>
+      <Image src={fieldTest} alt="" width={180} format="webp" class="about-portrait" />
+      <div class="about-strip-copy">
         <span class="section-number">A LITTLE ABOUT ME</span>
         <h2>保持好奇，把事情弄明白。</h2>
-        <p>在电子与代码之间探索，用作品留下每一步。</p>
+        <p>从电赛里的小模块，到光纤光栅解调仪，也记录实验室之外的生活。</p>
       </div>
       <a class="text-link" href={withBase('/about/')}>
         认识一下 <Icon name="arrow" size={18} />
@@ -456,23 +454,18 @@ const wave = Array.from(
     gap: 24px;
     align-items: center;
   }
-  .about-monogram {
-    position: relative;
+  .about-strip :global(.about-portrait) {
+    flex: none;
+    width: 68px;
+    height: 82px;
+    object-fit: cover;
+    object-position: 47% center;
     border: 1px solid var(--border);
-    padding: 10px 20px 10px 11px;
-    font: 22px/1.1 system-ui;
-    letter-spacing: 0.1em;
     border-radius: 7px;
-    color: var(--muted);
   }
-  .about-monogram span {
-    position: absolute;
-    bottom: 4px;
-    right: 6px;
-    font:
-      13px Consolas,
-      monospace;
-    color: var(--accent);
+  .about-strip-copy {
+    flex: 1;
+    min-width: 190px;
   }
   .about-strip h2 {
     font-size: 21px;
@@ -594,7 +587,7 @@ const wave = Array.from(
       font-size: 18px;
     }
     .about-strip > .text-link {
-      margin-left: 70px;
+      margin-left: 84px;
     }
     .home {
       padding-bottom: 40px;
@@ -614,7 +607,7 @@ const wave = Array.from(
     .section-heading h2 {
       font-size: 21px;
     }
-    .about-monogram {
+    .about-strip :global(.about-portrait) {
       display: none;
     }
     .about-strip > .text-link {

@@ -7,12 +7,16 @@ for (const theme of ['light', 'dark'])
     '/tools/log-analyzer/',
     '/tools/csv-plotter/',
     '/lab/signal-studio/',
+    '/about/',
     '/resume/',
     '/search/',
   ])
     test(`A-01 ${theme} ${path}`, async ({ page }, testInfo) => {
       await page.goto(path);
       await page.locator('#theme-select').selectOption(theme);
+      if (path === '/about/')
+        for (const summary of await page.locator('.about-page details summary').all())
+          await summary.click();
       if (path === '/tools/log-analyzer/') {
         await page.locator('#log-example').click();
         await expect(page.locator('#log-status')).toContainText(/完成|成功/);

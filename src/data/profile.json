@@ -1,12 +1,14 @@
 {
   "displayName": "喻锦权",
-  "intro": "你好，我是喻锦权。这里记录我对嵌入式、FPGA、Linux 与光纤传感的探索，也分享一些可以直接使用的小工具。",
-  "about": "我关注电子工程与计算机科学相遇的地方：从嵌入式系统、FPGA 与 Linux，到光纤传感和数据处理。这个空间用来整理探索中的方法，把想法逐步做成可以运行、可以复现的作品。你可以阅读实现笔记，也可以直接打开工具，用自己的数据试一试。这里的三个初始项目均为本站开发的演示，不代表既往任职或科研成果。",
-  "directions": ["EE / CS", "嵌入式开发", "FPGA", "Linux", "光纤传感"],
+  "intro": "你好，我是喻锦权。本科学习电子信息，如今专注于光纤光栅传感与解调仪表：从模拟电路、FPGA 到上位机，把每一环连成真正好用的系统。",
+  "about": "本科电赛让我建立了动手的信心，研究生阶段，我逐步走上光纤光栅解调仪的研制之路。我根据不同项目的需求开发仪表与功能，并在现场负责仪表运行、数据采集和分析。这里记录技术成长，也记录实验室之外的生活。",
+  "directions": ["电子信息", "模拟电路", "FPGA", "解调仪表", "光纤光栅传感"],
   "contactEmail": null,
   "phone": null,
   "location": null,
   "githubUrl": "https://github.com/AnkeY1",
+  "wechatId": "Armarsyu",
+  "hobbies": ["篮球", "钢琴", "健身", "游戏"],
   "socialLinks": [],
   "resumePdfPath": null,
   "publicProfileApproved": true

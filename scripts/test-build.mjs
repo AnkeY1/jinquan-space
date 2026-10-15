@@ -120,10 +120,12 @@ if (mode === 'base') {
   }
 } else if (mode === 'public') {
   const realProfilePath = resolve('src/data/profile.json');
+  const realResumePath = resolve('src/data/resume.json');
   const originalProfileBytes = await readFile(realProfilePath);
+  const originalResumeBytes = await readFile(realResumePath);
   const temporary = resolve('.test-dist/public-source');
   await mkdir(temporary, { recursive: true });
-  // A verified task-local directory only. The real profile and normal dist are never modified.
+  // A verified task-local directory only. Real profile/resume data and normal dist are never modified.
   assert.ok(
     temporary.startsWith(resolve('.test-dist') + join('/').replaceAll('/', '\\')) ||
       temporary.startsWith(resolve('.test-dist') + '/'),
@@ -149,6 +151,14 @@ if (mode === 'base') {
   profile.displayName = '合成公开构建测试';
   profile.intro = '合成测试资料';
   profile.about = '合成测试资料';
+  profile.wechatId = 'fixture_wechat';
+  profile.hobbies = ['合成测试爱好'];
+  const resumePath = join(temporary, 'src/data/resume.json');
+  const fixtureResume = JSON.parse(await readFile(resumePath, 'utf8'));
+  fixtureResume.summary = '合成测试履历';
+  for (const field of ['education', 'experience', 'publications', 'patents', 'awards'])
+    fixtureResume[field] = [];
+  await writeFile(resumePath, JSON.stringify(fixtureResume));
   const fixture = (visibility, slug, sentinel) =>
     `---\nslug: ${slug}\ntitle: ${sentinel}\nsummary: 合成测试内容\ntags: [fixture]\nvisibility: ${visibility}\nkind: demo\npublishedAt: '2026-10-15'\nrelatedProjectSlugs: []\nreferences: []\n---\n\n## 合成测试\n\n${sentinel}\n`;
   await writeFile(
@@ -196,6 +206,7 @@ if (mode === 'base') {
   const resume = await readFile(join(out, 'resume/index.html'), 'utf8');
   assert.match(resume, /资料模板：教育、任职与真实成果暂未填写/);
   assert.match(resume, /下列作品为本站演示项目/);
+  assert.match(resume, /微信：fixture_wechat/);
   assert.doesNotMatch(resume, /当前为预览构建|尚未完成公开确认/);
   const about = await readFile(join(out, 'about/index.html'), 'utf8');
   assert.doesNotMatch(about, /当前为预览/);
@@ -207,8 +218,9 @@ if (mode === 'base') {
     assert.ok(!sitemap.includes(forbidden));
   run(resolve('scripts/check-links.mjs'), [], publicEnv, temporary);
   assert.deepEqual(await readFile(realProfilePath), originalProfileBytes);
+  assert.deepEqual(await readFile(realResumePath), originalResumeBytes);
   console.log(
-    'E-PUBLIC-01: approval gate, clean rebuild, draft/preview filtering, canonical, noindex, sitemap and real profile unchanged passed',
+    'E-PUBLIC-01: approval gate, clean rebuild, draft/preview filtering, canonical, noindex, sitemap and real profile/resume unchanged passed',
   );
   const badPath = join(temporary, 'src/content/articles/fixture-invalid.md');
   const good = fixture('public', 'fixture-invalid', 'INVALID_FIXTURE');

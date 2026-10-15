@@ -1,6 +1,8 @@
 # 喻锦权 / Space
 
-一个可以静态部署的中文个人技术空间：19 个页面、3 个本站演示项目、3 篇功能说明文章、日志时间差分析器、CSV/TSV 数据绘图器和信号实验室。当前版本已获站长授权并发布至 [喻锦权 / Space](https://ankey1.github.io/jinquan-space/)。[首次部署](https://github.com/AnkeY1/jinquan-space/actions/runs/38704126532)与[完整 CI](https://github.com/AnkeY1/jinquan-space/actions/runs/38704918528)均已通过。
+一个可以静态部署的中文个人技术空间：19 个页面、3 个本站演示项目、3 篇功能说明文章、日志时间差分析器、CSV/TSV 数据绘图器和信号实验室。既有 v1.0.1 已获站长授权并发布至 [喻锦权 / Space](https://ankey1.github.io/jinquan-space/)，其[首次部署](https://github.com/AnkeY1/jinquan-space/actions/runs/38704126532)与[完整 CI](https://github.com/AnkeY1/jinquan-space/actions/runs/38704918528)均已通过。
+
+本地 v1.1.0 更新个人介绍与简历，加入 13 张站长供图的 WebP、兴趣和微信联系入口。叙述以本人从本科电赛启蒙到研究生系统积累的成长为主线，记录王加琪老师的指导与致谢、按不同任务独立研制多台仪表，以及出差前研制调试、现场运行和数据采集分析的职责。长距离光栅阵列相关论文仍在投稿，尚无公开阅读链接。本次更新已完成本地验证，等待发布；历史上线记录不代表 v1.1.0 已部署，结果见 [本轮验证记录](docs/evidence/profile-update-verification.json)。
 
 ## 本地运行
 
@@ -47,8 +49,9 @@ npx playwright install chromium firefox webkit
 
 ## 修改内容
 
-- 姓名、介绍、方向和可选联系方式：`src/data/profile.json`。
-- 简历区块：`src/data/resume.json`；未填写的区块隐藏。默认只提供模板打印。
+- 姓名、简介、方向、兴趣和可选联系方式：`src/data/profile.json`。
+- 关于页长故事、章节与图注：`src/pages/about.astro`；13 张处理后的照片：`src/assets/about/`。
+- 简历区块：`src/data/resume.json`；已填真实教育与研究开发经历，未填写的区块隐藏。页面支持打印，未配置 PDF 时隐藏下载入口。
 - 项目：`src/content/projects/*.md`；文章：`src/content/articles/*.md`。
 - 样例均为合成：`public/samples/`；原始访客文件只保存在本页内存中。
 - 完整新增范例、字段与图片规则：[内容维护指南](docs/CONTENT_GUIDE.md)。

@@ -1,188 +1,843 @@
 ---
+import { Image } from 'astro:assets';
 import Layout from '../layouts/Layout.astro';
 import { profile } from '../lib/profile';
 import { withBase } from '../lib/url';
+import fieldTest from '../assets/about/field-test.webp';
+import electronicsTeam from '../assets/about/electronics-team.webp';
+import labFriends from '../assets/about/lab-friends.webp';
+import portrait from '../assets/about/portrait.webp';
+import basketballFriends from '../assets/about/basketball-friends.webp';
+import qingdaoSeaTrial from '../assets/about/qingdao-sea-trial.webp';
+import cryogenicTest from '../assets/about/cryogenic-test.webp';
+import fpgaDebug from '../assets/about/fpga-debug.webp';
+import millionFbgExperiment from '../assets/about/million-fbg-experiment.webp';
+import instrumentBlack from '../assets/about/instrument-black.webp';
+import instrumentSilver from '../assets/about/instrument-silver.webp';
+import comacVisit from '../assets/about/comac-visit.webp';
+import guizhouDam from '../assets/about/guizhou-dam.webp';
+
+const chapters = [
+  { id: 'electronics', label: '电赛起点' },
+  { id: 'first-instrument', label: '第一次修仪表' },
+  { id: 'instrument-making', label: '把仪表做出来' },
+  { id: 'research', label: '继续做研究' },
+  { id: 'life', label: '实验室之外' },
+];
 ---
 
 <Layout title="关于我">
-  <div class="page about-page">
+  <article class="page about-page">
     <header class="about-hero">
-      <div class="name-tile" aria-hidden="true">
-        {Array.from(profile.displayName)
-          .slice(-2)
-          .map((character) => (
-            <span>{character}</span>
-          ))}
-        <small>SPACE</small>
-      </div>
-      <div>
+      <div class="hero-copy">
         <span class="eyebrow">HELLO / A LITTLE ABOUT ME</span>
         <h1>你好，我是{profile.displayName}。</h1>
-        <p>保持好奇，把事情弄明白。</p>
-      </div>
-    </header>
-    <div class="about-content">
-      <section>
-        <h2>在电子与代码之间</h2>
-        <p>{profile.about}</p>
-        <div class="tag-list">
-          {profile.directions.map((d) => (
-            <span class="tag">{d}</span>
+        <p class="hero-intro">{profile.about}</p>
+        <div class="tag-list" aria-label="我的研究与技术方向">
+          {profile.directions.map((direction) => (
+            <span class="tag">{direction}</span>
           ))}
         </div>
-      </section>
-      <section>
-        <h2>从这里了解我的方向</h2>
-        <p>
-          本站三个演示项目围绕本地数据处理与交互式信号计算展开。项目详情记录实现机制，工具与实验则提供直接可用的入口。
-        </p>
-        <div class="button-row">
-          <a class="button primary" href={withBase('/projects/')}>
-            浏览项目 ↗
-          </a>
-          <a class="button" href={withBase('/resume/')}>
-            查看在线简历
-          </a>
-        </div>
-      </section>
-      <section>
-        <h2>联系与公开资料</h2>
-        {profile.contactEmail ? (
-          <p>
-            <a href={`mailto:${profile.contactEmail}`}>{profile.contactEmail}</a>
-          </p>
-        ) : (
-          <p class="muted">公开联系方式尚未设置。</p>
-        )}
-        {profile.githubUrl && (
-          <p>
-            <a href={profile.githubUrl} rel="noopener noreferrer">
-              GitHub ↗
+        <a class="text-link hero-contact" href="#contact">
+          来聊聊研究与生活 <span aria-hidden="true">↗</span>
+        </a>
+      </div>
+      <figure class="hero-figure">
+        <Image
+          src={fieldTest}
+          alt="带着自研解调仪外出测试时，在中天门口的留影"
+          layout="constrained"
+          format="webp"
+          width={720}
+          sizes="(max-width: 760px) calc(100vw - 40px), 430px"
+          loading="eager"
+          fetchpriority="high"
+        />
+        <figcaption>把自己做的仪表带到现场，也把新的问题带回实验室。</figcaption>
+      </figure>
+    </header>
+
+    <nav class="chapter-nav" aria-label="关于我章节导航">
+      <span class="eyebrow">MY STORY</span>
+      <ol>
+        {chapters.map((chapter, index) => (
+          <li>
+            <a href={`#${chapter.id}`}>
+              <span aria-hidden="true">0{index + 1}</span>
+              {chapter.label}
             </a>
-          </p>
-        )}
-        {profile.socialLinks.map((link) => (
-          <p>
-            <a href={link.url} rel="noopener noreferrer">
-              {link.label} ↗
-            </a>
-          </p>
+          </li>
         ))}
-        <p class="small muted">
-          {__SITE_MODE__ === 'preview' && '当前为预览构建。'}
-          教育、任职与成果仅在站长提供并确认公开后展示。
-        </p>
-      </section>
-      <section class="site-note">
-        <span class="eyebrow">ABOUT THIS SPACE</span>
-        <h2>一个持续生长的个人空间</h2>
+      </ol>
+    </nav>
+
+    <section class="story-section" id="electronics" aria-labelledby="electronics-heading">
+      <div class="chapter-rail" aria-hidden="true">
+        <span>01</span>
+        <small>起点 / 电子信息</small>
+      </div>
+      <div class="story-body">
+        <h2 id="electronics-heading">从一块放大器开始</h2>
         <p>
-          这里收集作品、技术笔记与小实验。本站工具在浏览器本地处理文件，应用只保存主题偏好。
-          <a href={withBase('/privacy/')}>阅读隐私说明</a>。
+          我本科读的是电子信息。那时，我和擅长算法的汤子恒、擅长嵌入式软件的张潜组成三人小队，在学校的电赛实验室学习、备赛。我主要负责硬件：放大器、比较器、滤波器，需要什么模块，就想办法做出来。
         </p>
-      </section>
-    </div>
-  </div>
+        <p>
+          刚开始，一个放大器可能要折腾好几天，测试时还接反过电源。晚上躺下了，脑子里仍在想白天的电路到底哪里出了问题。后来，做得多了、排错也熟了，几个小时就能做出稳定满足需求的滤波器模块。《你好，放大器》给过我不少帮助；如果你也刚开始接触模拟电路，可以找来读读。
+        </p>
+        <p>
+          电赛也帮我建立了基础知识和动手的信心，面对陌生技术时，不会先觉得自己做不了。后来从 STM32
+          转向 FPGA、从电学走向光学，这份敢于尝试的底气，让我学起新东西也更快一些。
+        </p>
+        <figure class="story-photo">
+          <Image
+            src={electronicsTeam}
+            alt="本科电赛实验室伙伴们的合照"
+            layout="constrained"
+            format="webp"
+            width={1440}
+            sizes="(max-width: 760px) calc(100vw - 40px), 780px"
+            loading="lazy"
+          />
+          <figcaption>本科时的电赛实验室，和一起学习、备赛的伙伴们。</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="story-section" id="first-instrument" aria-labelledby="first-instrument-heading">
+      <div class="chapter-rail" aria-hidden="true">
+        <span>02</span>
+        <small>转向 / 光纤传感</small>
+      </div>
+      <div class="story-body">
+        <h2 id="first-instrument-heading">用熟悉的电路，走进陌生的光学</h2>
+        <p>
+          读研后，我进入光纤光栅传感方向，接到的第一个任务，是修复一台已经闲置一两年的解调仪。面对不熟悉的光学系统，我决定先从本科积累的电路测试经验入手，逐段检查电信号的输入和输出。
+        </p>
+        <p>
+          几天后，问题逐渐清楚了：光滤波器驱动板上的功放芯片散热不足，运行约一分钟就会触发过热保护，驱动信号随之消失，后续信号也因此异常。解决散热问题后，仪表恢复了正常。这件事让我找到了一条学习新领域的方法：先抓住自己能理解、能测量的部分，再顺着信号链一点点往前走。
+        </p>
+        <details class="demodulation-note">
+          <summary>想了解解调仪？展开一个简短解释</summary>
+          <h3>光纤光栅与解调仪，是怎样配合的？</h3>
+          <p>
+            光纤光栅可以理解为光纤中的一段特殊结构，它反射光的中心波长会随温度、应变等变化而移动。解调仪通过光学和电学环节跟踪这种变化，再结合标定关系得到被测物理量。
+          </p>
+          <ol class="signal-flow" aria-label="光纤光栅解调的简化流程">
+            <li>
+              <strong>提供探测光</strong>
+              <span>光源照向光栅</span>
+            </li>
+            <li>
+              <strong>接收反射信号</strong>
+              <span>波长携带变化信息</span>
+            </li>
+            <li>
+              <strong>采集与处理</strong>
+              <span>光电转换、ADC 与 FPGA</span>
+            </li>
+            <li>
+              <strong>换算物理量</strong>
+              <span>结合温度、应变标定</span>
+            </li>
+          </ol>
+          <a
+            class="principle-link"
+            href="https://download.ni.com/pub/gdc/tut/ni_tutorial_12953.pdf"
+            rel="noopener noreferrer"
+          >
+            延伸阅读：NI 光纤光栅传感原理（PDF）↗
+          </a>
+        </details>
+      </div>
+    </section>
+
+    <section
+      class="story-section"
+      id="instrument-making"
+      aria-labelledby="instrument-making-heading"
+    >
+      <div class="chapter-rail" aria-hidden="true">
+        <span>03</span>
+        <small>实践 / 仪表开发</small>
+      </div>
+      <div class="story-body">
+        <h2 id="instrument-making-heading">把各部分连成一台仪表</h2>
+        <p>
+          带着本科阶段积累的基础和信心，读研后我跟着王加琪老师学习做仪表，也从 STM32 逐步转向
+          FPGA。研究生阶段，我进一步系统学习相关理论、积累技术，持续提高仪表研制能力。
+        </p>
+        <p>
+          我一直很佩服他做仪表的功力，也很感谢他的高要求。他做事讲究精益求精，对问题会直接指出，跟着学习的过程中，我没少挨批评。但他也会给我成熟的方法，有时亲自做一遍给我看，让我知道该怎么改。这样一边被提醒、一边动手实践，我学到的不只是某个环节的具体做法，也慢慢懂得怎样把一台仪表做得更扎实。这段学习经历对我影响很大。
+        </p>
+        <p>对我来说，一台仪表的开发主要有三部分。</p>
+        <ol class="engineering-work">
+          <li>
+            <strong>FPGA 工程与系统调试</strong>
+            <p>协同控制光源和 SOA 的出光时序，完成同步、ADC 数据采集与处理，并与光路配合调试。</p>
+          </li>
+          <li>
+            <strong>机箱设计与装配</strong>
+            <p>用 CAD 画面板、规划接口和器件位置，把各部分装进机箱并可靠固定。</p>
+          </li>
+          <li>
+            <strong>网口通信与上位机</strong>
+            <p>接收 FPGA 通过网口发送的数据，完成可视化和操作交互。</p>
+          </li>
+        </ol>
+        <p>
+          上位机常常需要花很多心思。仪表最终要交到别人手里，使用者未必了解底层逻辑。我希望界面能把操作步骤和设备状态说清楚，让第一次接触它的人也能顺利开始测量。
+        </p>
+        <p>
+          沿着这条路，我陆续研制过多台仪表，这里照片中展示的仪表都由我研制和调试。每次项目和出差的数据采集、分析需求不同，我也会据此调整仪表的配置与功能。反复调试、把各个环节配合好，是每一台都绕不过去的工作。
+        </p>
+        <details class="record-details">
+          <summary>仪表研制记录：代码调试与两台实物</summary>
+          <div class="instrument-photos">
+            <figure class="story-photo debug-photo">
+              <div class="rotation-frame">
+                <Image
+                  src={fpgaDebug}
+                  alt="FPGA 工程代码与仪表调试现场"
+                  layout="constrained"
+                  format="webp"
+                  width={1000}
+                  sizes="(max-width: 760px) calc(75vw - 30px), 585px"
+                  loading="lazy"
+                />
+              </div>
+              <figcaption>从 FPGA 代码到硬件信号，一步步把时序和采集流程调通。</figcaption>
+            </figure>
+            <figure class="story-photo">
+              <Image
+                src={instrumentBlack}
+                alt="曾研制的一台黑色机箱仪表实物"
+                layout="constrained"
+                format="webp"
+                width={1000}
+                sizes="(max-width: 760px) calc(100vw - 40px), 390px"
+                loading="lazy"
+              />
+              <figcaption>做过的仪表之一，黑色机箱版本。</figcaption>
+            </figure>
+            <figure class="story-photo">
+              <Image
+                src={instrumentSilver}
+                alt="曾研制的一台银色机箱仪表实物"
+                layout="constrained"
+                format="webp"
+                width={1000}
+                sizes="(max-width: 760px) calc(100vw - 40px), 390px"
+                loading="lazy"
+              />
+              <figcaption>另一台仪表实物，银色机箱版本。</figcaption>
+            </figure>
+          </div>
+        </details>
+        <div class="field-story">
+          <h3>带着自己做的仪表去现场</h3>
+          <p>
+            出差前，我会按任务需求研制仪表或补充相应功能；出差时，我主要负责仪表运行、数据采集和分析。现场其他专业环节由同行伙伴协作完成，彼此配合。
+          </p>
+          <p>
+            我曾带着自研解调仪去中天，采集和分析光栅光纤封装成缆后的光栅位置与反射信号。页首那张照片，就是外出测试时在门口留下的纪念。现场总会遇到桌面调试之外的细节，譬如：
+            <strong>铠装光缆是真的难剥。</strong>
+          </p>
+          <p>
+            我也带着自己做的仪表，和水听组一起去了青岛海试。傍晚在海边围着设备一起调试，是这段经历里留在照片中的一个瞬间。
+          </p>
+          <p>
+            在上海超导电缆实验室，我还参与了液氮低温测试：希望了解光栅传感器能否监测这样的低温环境，以及能否识别低温下微小的温度变化。这些现场问题，也让仪表开发和传感器测试有了更具体的目标。
+          </p>
+          <p>
+            还有一次，我带着仪表去了上海商飞测试，也在现场留下了一张照片。每次外出，都有一些需要带回实验室继续琢磨的细节。
+          </p>
+          <p>
+            我也带着自研仪表去过贵州一座大坝的坝体现场。站在高高的坝体上，看着下方深深的悬崖，感受着烈日、风沙和施工现场的气味，一线工作的辛苦变得很具体。那次之后，我对工人们日常付出的体力和耐心，也多了一份体会。
+          </p>
+        </div>
+        <div class="field-photos">
+          <figure class="story-photo">
+            <Image
+              src={qingdaoSeaTrial}
+              alt="青岛海试期间，傍晚在海边一起调试设备的场景"
+              layout="constrained"
+              format="webp"
+              width={1000}
+              sizes="(max-width: 760px) calc(100vw - 40px), 390px"
+              loading="lazy"
+            />
+            <figcaption>带着自己做的仪表，和水听组一起赴青岛海试。</figcaption>
+          </figure>
+          <figure class="story-photo">
+            <Image
+              src={cryogenicTest}
+              alt="在上海超导电缆实验室进行液氮低温测试的现场"
+              layout="constrained"
+              format="webp"
+              width={1000}
+              sizes="(max-width: 760px) calc(100vw - 40px), 390px"
+              loading="lazy"
+            />
+            <figcaption>在上海超导电缆实验室，探索光栅传感器在液氮低温下的温度监测。</figcaption>
+          </figure>
+          <figure class="story-photo">
+            <Image
+              src={comacVisit}
+              alt="带着仪表去上海商飞测试时的留影"
+              layout="constrained"
+              format="webp"
+              width={1000}
+              sizes="(max-width: 760px) calc(100vw - 40px), 390px"
+              loading="lazy"
+            />
+            <figcaption>带着仪表去上海商飞测试时的留影。</figcaption>
+          </figure>
+          <figure class="story-photo">
+            <Image
+              src={guizhouDam}
+              alt="带着自研仪表到贵州大坝坝体现场的记录"
+              layout="constrained"
+              format="webp"
+              width={1000}
+              sizes="(max-width: 760px) calc(100vw - 40px), 390px"
+              loading="lazy"
+            />
+            <figcaption>带着自研仪表来到贵州的大坝坝体现场，也更体会到一线工人的辛苦。</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <section class="story-section" id="research" aria-labelledby="research-heading">
+      <div class="chapter-rail" aria-hidden="true">
+        <span>04</span>
+        <small>深耕 / 解调研究</small>
+      </div>
+      <div class="story-body">
+        <h2 id="research-heading">沿着光纤光栅继续做下去</h2>
+        <p>
+          从硕士到博士，我一直在做解调相关工作，也在一次次搭建、测试和排错中加深对整个系统的理解。在老师们和实验室的支持下，我有机会围绕一条长达
+          100 公里、包含约 100 万个物理光栅的传感阵列开展研究。
+        </p>
+        <p>
+          怎样把长距离、大规模的传感阵列和实际可用的解调仪结合起来，是我持续投入的方向。相关研究目前正在投稿，后续有可公开的论文信息时，我会把阅读入口补到这里。
+        </p>
+        <figure class="story-photo">
+          <div class="rotation-frame">
+            <Image
+              src={millionFbgExperiment}
+              alt="100 公里、约 100 万个物理光栅传感阵列的解调实验现场"
+              layout="constrained"
+              format="webp"
+              width={1200}
+              sizes="(max-width: 760px) calc(75vw - 30px), 585px"
+              loading="lazy"
+            />
+          </div>
+          <figcaption>100 公里、约 100 万个物理光栅传感阵列的解调实验。</figcaption>
+        </figure>
+        <details class="record-details">
+          <summary>和实验室伙伴们的合照</summary>
+          <figure class="story-photo">
+            <Image
+              src={labFriends}
+              alt="和实验室学弟们一起留下的合照"
+              layout="constrained"
+              format="webp"
+              width={1440}
+              sizes="(max-width: 760px) calc(100vw - 40px), 780px"
+              loading="lazy"
+            />
+            <figcaption>和实验室学弟们的合照。一起做实验，也一起留下开心的时刻。</figcaption>
+          </figure>
+        </details>
+      </div>
+    </section>
+
+    <section class="story-section" id="life" aria-labelledby="life-heading">
+      <div class="chapter-rail" aria-hidden="true">
+        <span>05</span>
+        <small>日常 / 生活里的我</small>
+      </div>
+      <div class="story-body">
+        <h2 id="life-heading">实验室之外，也欢迎认识我</h2>
+        <p>
+          我喜欢打篮球、弹钢琴、健身，也会和朋友一起打游戏。这些爱好让生活有了不同的节奏；和队友、朋友、实验室学弟们相处的日子，也都是我很珍惜的部分。
+        </p>
+        <div class="tag-list hobby-list" aria-label="我的爱好">
+          {profile.hobbies.map((hobby) => (
+            <span class="tag">{hobby}</span>
+          ))}
+        </div>
+        <div class="life-photos">
+          <figure class="story-photo basketball-photo">
+            <Image
+              src={basketballFriends}
+              alt="傍晚和朋友们在篮球场边的合照"
+              layout="constrained"
+              format="webp"
+              width={1200}
+              sizes="(max-width: 760px) calc(100vw - 40px), 480px"
+              loading="lazy"
+            />
+            <figcaption>和朋友们一起打球的日子。</figcaption>
+          </figure>
+          <figure class="story-photo portrait-photo">
+            <Image
+              src={portrait}
+              alt="健身房里的个人生活照"
+              layout="constrained"
+              format="webp"
+              width={640}
+              sizes="(max-width: 760px) 280px, 270px"
+              loading="lazy"
+            />
+            <figcaption>健身，也是日常的一部分。</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <section class="contact-section" id="contact" aria-labelledby="contact-heading">
+      <span class="eyebrow">SAY HELLO</span>
+      <h2 id="contact-heading">研究可以聊，生活也可以。</h2>
+      <p>
+        如果你也在做光纤传感、FPGA
+        或仪表开发，或者只是想聊聊篮球和游戏，欢迎来认识我。不用太拘谨，很高兴认识你。
+      </p>
+      {profile.wechatId && (
+        <p class="wechat-contact">
+          <span>微信</span>
+          <code>{profile.wechatId}</code>
+        </p>
+      )}
+      <div class="button-row">
+        {profile.githubUrl && (
+          <a class="button" href={profile.githubUrl} rel="noopener noreferrer">
+            GitHub ↗
+          </a>
+        )}
+        <a class="button" href={withBase('/resume/')}>
+          查看在线简历 ↗
+        </a>
+        {profile.contactEmail && (
+          <a class="button" href={`mailto:${profile.contactEmail}`}>
+            邮件联系 ↗
+          </a>
+        )}
+      </div>
+    </section>
+  </article>
 </Layout>
+
 <style>
   .about-page {
-    max-width: 1000px;
+    max-width: 1080px;
     margin: auto;
   }
   .about-hero {
-    display: flex;
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
     align-items: center;
-    gap: 38px;
-    margin: 10px 0 60px;
+    gap: clamp(30px, 5vw, 64px);
+    margin: 6px 0 48px;
   }
-  .name-tile {
-    flex: none;
-    width: 125px;
-    height: 144px;
-    border: 1px solid var(--border);
-    background: var(--surface);
+  .hero-copy {
+    min-width: 0;
+  }
+  h1 {
+    font-size: clamp(30px, 3.5vw, 43px);
+    margin: 18px 0 24px;
+  }
+  .hero-intro {
+    color: var(--muted);
+    font-size: 16px;
+    line-height: 1.95;
+    margin-bottom: 24px;
+  }
+  .hero-contact {
+    margin-top: 26px;
+  }
+  figure {
+    margin: 0;
+  }
+  .hero-figure {
+    min-width: 0;
+  }
+  .hero-figure img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    object-position: 45% 50%;
     border-radius: 10px;
-    position: relative;
-    padding: 22px;
-    color: var(--text);
-    font-size: 37px;
-    line-height: 1.1;
   }
-  .name-tile span {
+  figcaption {
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.7;
+    margin-top: 11px;
+  }
+  .chapter-nav {
+    padding: 24px 0;
+    margin-bottom: 60px;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .chapter-nav ol {
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 28px;
+    row-gap: 8px;
+    list-style: none;
+    padding: 0;
+    margin: 12px 0 0;
+  }
+  .chapter-nav a {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    min-height: 32px;
+    color: var(--text);
+    font-size: 13px;
+    text-decoration: none;
+  }
+  .chapter-nav a:hover {
+    color: var(--accent);
+  }
+  .chapter-nav a span {
+    font:
+      11px ui-monospace,
+      Consolas,
+      monospace;
+    color: var(--muted);
+  }
+  .story-section {
+    display: grid;
+    grid-template-columns: 150px minmax(0, 780px);
+    gap: 36px;
+    margin-bottom: 72px;
+  }
+  .chapter-rail {
+    padding-top: 4px;
+  }
+  .chapter-rail > span {
+    display: block;
+    color: var(--accent);
+    font:
+      15px ui-monospace,
+      Consolas,
+      monospace;
+    margin-bottom: 12px;
+  }
+  .chapter-rail small {
+    color: var(--muted);
+    font-size: 11px;
+    line-height: 1.7;
+  }
+  .story-body {
+    min-width: 0;
+  }
+  .story-body h2 {
+    font-size: clamp(23px, 2.5vw, 29px);
+    margin-bottom: 23px;
+  }
+  .story-body p {
+    color: var(--muted);
+    font-size: 16px;
+    line-height: 1.95;
+  }
+  .story-body strong {
+    color: var(--text);
+    font-weight: 600;
+  }
+  .story-photo {
+    margin-top: 30px;
+  }
+  .story-photo img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+  }
+  .demodulation-note {
+    margin-top: 30px;
+    padding: 12px 0;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .demodulation-note summary {
+    color: var(--text);
+    padding: 8px 0;
+    min-height: 44px;
+  }
+  .demodulation-note[open] summary {
+    margin-bottom: 22px;
+  }
+  .demodulation-note h3 {
+    font-size: 19px;
+    margin: 10px 0 16px;
+  }
+  .demodulation-note p {
+    font-size: 14px;
+  }
+  .signal-flow {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+    padding: 0 0 0 20px;
+    margin: 22px 0;
+  }
+  .signal-flow li {
+    padding-left: 2px;
+    font-size: 12px;
+    color: var(--accent);
+  }
+  .signal-flow strong {
+    display: block;
+    font-size: 13px;
+    margin-bottom: 6px;
+  }
+  .signal-flow span {
+    color: var(--muted);
+    font-size: 11px;
+    line-height: 1.6;
     display: block;
   }
-  .name-tile small {
-    position: absolute;
-    right: 12px;
-    bottom: 12px;
+  .principle-link {
+    font-size: 12px;
+  }
+  .engineering-work {
+    list-style: decimal-leading-zero;
+    padding-left: 28px;
+    margin: 27px 0;
+  }
+  .engineering-work li {
+    padding: 0 0 17px 10px;
+    margin-bottom: 17px;
+    border-bottom: 1px solid var(--border);
+  }
+  .engineering-work li::marker {
     font:
-      12px Consolas,
+      12px ui-monospace,
+      Consolas,
       monospace;
     color: var(--accent);
   }
-  h1 {
-    font-size: clamp(27px, 3.3vw, 39px);
-    margin: 15px 0 10px;
-  }
-  .about-hero p {
-    color: var(--muted);
+  .engineering-work strong {
     font-size: 16px;
-    margin: 0;
   }
-  .about-content {
-    margin-left: 163px;
-    max-width: 720px;
+  .engineering-work p {
+    margin: 7px 0 0;
+    font-size: 14px;
   }
-  .about-content section {
-    margin-bottom: 45px;
+  .field-story {
+    margin-top: 29px;
+    padding-left: 21px;
+    border-left: 2px solid var(--accent);
   }
-  .about-content h2 {
-    font-size: 24px;
+  .field-story h3 {
+    font-size: 18px;
+    margin-bottom: 10px;
   }
-  .about-content p {
+  .field-story p {
+    font-size: 14px;
+  }
+  .field-story p:last-child {
+    margin-bottom: 0;
+  }
+  .hobby-list {
+    margin-top: 21px;
+  }
+  .record-details {
+    margin-top: 27px;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .record-details summary {
+    min-height: 52px;
+    color: var(--text);
+    font-size: 14px;
+  }
+  .record-details[open] {
+    padding-bottom: 23px;
+  }
+  .record-details[open] summary {
+    border-bottom: 1px solid var(--border);
+  }
+  .instrument-photos {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 24px;
+    align-items: start;
+  }
+  .debug-photo {
+    grid-column: 1 / -1;
+  }
+  .rotation-frame {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    border-radius: 8px;
+  }
+  .rotation-frame img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 75%;
+    height: 133.333333%;
+    max-width: none;
+    object-fit: contain;
+    border-radius: 0;
+    transform: translate(-50%, -50%) rotate(-90deg);
+  }
+  .field-photos {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+    align-items: start;
+  }
+  .life-photos {
+    display: grid;
+    grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
+    gap: 24px;
+    align-items: start;
+  }
+  .portrait-photo {
+    margin-top: 83px;
+  }
+  .contact-section {
+    margin-left: 186px;
+    max-width: 780px;
+    border-top: 1px solid var(--border);
+    padding-top: 36px;
+  }
+  .contact-section h2 {
+    font-size: 26px;
+    margin: 12px 0 19px;
+  }
+  .contact-section > p {
+    max-width: 680px;
+    font-size: 15px;
     color: var(--muted);
     line-height: 1.9;
   }
-  .site-note {
-    padding-top: 28px;
-    border-top: 1px solid var(--border);
+  .wechat-contact {
+    display: flex;
+    align-items: baseline;
+    gap: 17px;
+    margin: 25px 0;
   }
-  .site-note h2 {
-    font-size: 20px;
-    margin-top: 12px;
+  .wechat-contact span {
+    font-size: 13px;
+  }
+  .wechat-contact code {
+    color: var(--text);
+    font-size: 21px;
+    user-select: text;
+  }
+  @media (max-width: 960px) {
+    .story-section {
+      grid-template-columns: 125px minmax(0, 1fr);
+      gap: 25px;
+    }
+    .contact-section {
+      margin-left: 150px;
+    }
+    .signal-flow {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      row-gap: 18px;
+    }
   }
   @media (max-width: 760px) {
     .about-hero {
-      gap: 20px;
-      margin-bottom: 36px;
-      align-items: start;
-    }
-    .name-tile {
-      width: 78px;
-      height: 100px;
-      padding: 15px;
-      font-size: 27px;
-    }
-    .name-tile small {
-      font-size: 9px;
-      right: 8px;
-      bottom: 8px;
-    }
-    .about-hero .eyebrow {
-      font-size: 9px;
+      grid-template-columns: 1fr;
+      gap: 30px;
+      margin-bottom: 32px;
     }
     h1 {
-      font-size: 26px;
-      margin-top: 9px;
+      margin-top: 13px;
+      margin-bottom: 19px;
+      font-size: clamp(28px, 6vw, 38px);
     }
-    .about-hero p {
-      font-size: 13px;
+    .hero-intro {
+      font-size: 15px;
     }
-    .about-content {
+    .hero-figure {
+      max-width: 520px;
+    }
+    .hero-figure img {
+      aspect-ratio: 3 / 2;
+      object-position: center;
+    }
+    .chapter-nav {
+      padding: 20px 0;
+      margin-bottom: 37px;
+    }
+    .chapter-nav ol {
+      column-gap: 20px;
+      row-gap: 4px;
+    }
+    .story-section {
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin-bottom: 48px;
+    }
+    .chapter-rail {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0;
+    }
+    .chapter-rail > span {
+      margin: 0;
+      font-size: 12px;
+    }
+    .chapter-rail small {
+      font-size: 10px;
+    }
+    .story-body h2 {
+      margin-bottom: 18px;
+    }
+    .story-body p {
+      font-size: 15px;
+      line-height: 1.95;
+    }
+    .demodulation-note p,
+    .engineering-work p,
+    .field-story p {
+      font-size: 14px;
+    }
+    .life-photos,
+    .field-photos,
+    .instrument-photos {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+    .portrait-photo {
+      width: min(75%, 280px);
+      margin-top: 25px;
+      margin-left: auto;
+    }
+    .contact-section {
       margin-left: 0;
+      padding-top: 29px;
     }
-    .about-content h2 {
-      font-size: 22px;
+    .contact-section h2 {
+      font-size: 23px;
+    }
+  }
+  @media print {
+    .chapter-nav,
+    .hero-contact {
+      display: none;
+    }
+    .story-section {
+      break-inside: auto;
+    }
+    figure {
+      break-inside: avoid;
     }
   }
 </style>
