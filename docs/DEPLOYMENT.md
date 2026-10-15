@@ -2,7 +2,11 @@
 
 站长已于 2026-10-15 明确授权“同意公开发布当前版本”。已通过登录后的 GitHub 界面创建公开仓库 [AnkeY1/jinquan-space](https://github.com/AnkeY1/jinquan-space)。正式资料批准字段现为 `true`，公开 GitHub 资料链接为 [AnkeY1](https://github.com/AnkeY1)；联系邮箱与未提供的履历仍保持空白。
 
-本次发布配置为 `SITE_ORIGIN=https://ankey1.github.io`、`SITE_BASE=/jinquan-space/`，目标 Pages 地址为 [https://ankey1.github.io/jinquan-space/](https://ankey1.github.io/jinquan-space/)。这是确定的发布目标；当前记录尚未确认 Pages 部署成功或线上可访问。本地验证结果见 `TEST_REPORT.md`，发布进展见 `PROGRESS.md`。
+网站已发布到 [https://ankey1.github.io/jinquan-space/](https://ankey1.github.io/jinquan-space/)，配置为 `SITE_ORIGIN=https://ankey1.github.io`、`SITE_BASE=/jinquan-space/`。2026-10-15 已通过登录后的 GitHub 界面确认[首次正式发布工作流 #1](https://github.com/AnkeY1/jinquan-space/actions/runs/38704126532)为 Success，用时 1分3秒，触发工作流修订为 `15ce83f`；首发源码已由 bot 恢复提交。
+
+当日 16:18（Asia/Shanghai）使用普通、无登录会话的 HTTPS 请求复核：40/40 公开文件返回 HTTP200，覆盖19个HTML页面；sitemap含16条，搜索索引含9条，不存在的路由返回本站真实HTTP404。完整审查见 `evidence/online-publication-audit.json`。这些结果不代表指定地区运营商、真实手机或所有浏览器均已验证。
+
+独立完整CI [Validate static site](https://github.com/AnkeY1/jinquan-space/actions/runs/38704918528)已通过GitHub REST确认Success，修订`61e9432`，运行记录时间为2026-10-15 16:20:09–16:22:24（Asia/Shanghai），21个步骤全部成功。类型、lint、格式、单元、构建、Chromium浏览器旅程、axe、子路径、公开门禁、链接与体积检查均通过；证据为 `evidence/github-actions-audit.json` 与 `evidence/github-actions-jobs-audit.json`。
 
 ## 本地构建与配置
 
@@ -39,28 +43,26 @@ Remove-Item Env:SITE_MODE, Env:SITE_ORIGIN, Env:SITE_BASE
 
 ## GitHub Pages 准备步骤
 
-本次公开发布已获授权。仓库已经创建，以下账户侧设置、上传与工作流结果须以实际执行状态为准：
+首次公开发布已完成。后续维护沿用下列设置与手动发布过程：
 
 1. 目标账号和仓库已确定为 `AnkeY1/jinquan-space`。上传前检查发布文件不含私人文件、凭证、测试中间目录或访客数据。
 2. 按所选仓库的默认分支维护代码。`ci.yml` 默认监听 `main`；如果实际默认分支不同，应修改该触发器。部署工作流只接受默认分支的手动运行。
 3. 在 Settings → Pages 将 Source 设为 GitHub Actions。本站输出普通静态目录，使用 `.github/workflows/deploy-pages.yml`，无需 Astro 服务端 adapter。GitHub 官方说明了自定义工作流与 Pages 环境的连接方式。[GitHub Pages 工作流](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages)、[Astro 的 GitHub Pages 部署说明](https://docs.astro.build/en/guides/deploy/github/)。
 4. 在 Settings → Secrets and variables → Actions → Variables 可配置 `SITE_ORIGIN=https://ankey1.github.io` 与 `SITE_BASE=/jinquan-space/`。前者是源站，后者是本次项目站的挂载路径；未设置或为空时，发布工作流使用这两个已确认值，非空仓库变量优先。
-5. 检查 `github-pages` environment 的分支规则，按账户能力设置人工 reviewer。工作流的部署 job 只在构建成功后取得 Pages 写权限和 OIDC 权限；CI 只有源码读取权限。[官方权限与 environment 要求](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages#deploying-github-pages-artifacts)。
+5. 检查 `github-pages` environment 的分支规则，按账户能力设置人工 reviewer。构建 job 只有源码和 Pages 读取权限，checkout 不保留凭据；部署 job 只在构建成功后取得 Pages 写权限和 OIDC 权限。独立CI只有源码读取权限。[官方权限与 environment 要求](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages#deploying-github-pages-artifacts)。
 6. 当前已批准资料保留本站演示与简历模板标识。检查真实发布配置下的工具、下载、外链、简历打印和隐私说明，并检查相同修订的 CI。
 7. 本次已获发布授权，可手动打开 Actions → Publish approved site to GitHub Pages，选择默认分支，勾选发布确认输入并运行。该工作流没有 `push`、`pull_request` 或 `workflow_run` 发布触发器；取消勾选会明确失败，不会发布。
 8. 工作流通过后，使用 GitHub 返回的实际 URL 检查页面、`404.html`、搜索 JSON、示例、Worker、CSV/PNG 导出、canonical 和 sitemap。失败时保留日志，修复后重新手动发布。
 
-后续版本的提交代码和运行 CI 不等于新的发布授权。工作流文件已备好，也不等于 GitHub 账户上的 workflow 已执行或成功。
+后续版本的提交代码和运行 CI 不等于新的发布授权。首次发布成功也不能替代后续修订的实际工作流结果。
 
-## 通过网页首发完整源码
+## 首发源码恢复已完成
 
-本次使用已登录的 GitHub 网页操作。网页不能直接上传完整目录时，在仓库默认分支分别创建 `.github/workflows/deploy-pages.yml` 和 `.github/workflows/ci.yml`，并上传名为 `source-upload.zip` 的源码包。压缩包根目录应直接包含 `package.json`、`package-lock.json`、`src/`、`public/`、`scripts/` 等项目文件，不额外套一层项目目录；不放入凭证、`node_modules/`、构建产物或本地测试中间目录。
+首次发布使用已登录的 GitHub 网页创建发布工作流并上传 `source-upload.zip`。当时的临时引导对压缩包先完整校验，拒绝绝对路径、父目录跳转、`.git`、符号链接和特殊文件，跳过 `.github/workflows/`，再以 `github-actions[bot]` 恢复普通源码、删除 ZIP 并提交推送；首次发布已成功完成这一过程。
 
-手动运行已批准的发布工作流后，首先检查发布确认输入。仅 `AnkeY1/jinquan-space` 的默认分支可执行 build job；该 job 取得源码写权限，并使用 checkout 保留的临时 `GITHUB_TOKEN` 凭据完成一次首发源码恢复。解压器在写入前检查所有条目，拒绝绝对路径、父目录跳转、`.git`、压缩包自身、符号链接及其他特殊文件；`.github/workflows/` 内的内容始终跳过，保留网页创建的工作流文件。因此无需向用户索取访问令牌，也不会尝试用该令牌修改 workflow。
+当前维护版工作流已移除该一次性 ZIP 引导和重复的前置确认步骤，将 build job 的 `contents` 恢复为 `read`，checkout 的 `persist-credentials` 恢复为 `false`。保留仓库与默认分支限制、手动确认输入、个人资料批准门禁、源码验证和独立部署 job。后续直接维护已恢复的正常源码，不再上传首发 ZIP，也无需额外访问令牌。
 
-解压完成后删除 `source-upload.zip`，以标准 `github-actions[bot]` 身份将普通源码提交并推送回默认分支；推送失败则停止。随后才设置 Node.js、检查个人资料公开批准、安装锁定依赖、验证源码并构建发布。build job 不取得 Pages 写权限；部署 job 仍单独取得 Pages 写权限和 OIDC 权限。以后仓库中没有该 ZIP 时，自动跳过引导步骤并使用现有源码正常构建。
-
-这段首发引导不会自动触发发布；仍需本次手动工作流与勾选确认。源码恢复提交由 `GITHUB_TOKEN` 创建，不依赖它触发额外 CI；发布工作流本身继续执行源码验证。待首发完成后，可移除此引导步骤并将 build job 的 `contents` 权限恢复为 `read`，同时将 checkout 的 `persist-credentials` 恢复为 `false`。
+首次运行成功不等于这份收尾修订已经再次发布；远程最终文件与后续CI结果应以仓库和Actions实际状态为准。
 
 ## 自定义域名
 
@@ -70,7 +72,7 @@ Remove-Item Env:SITE_MODE, Env:SITE_ORIGIN, Env:SITE_BASE
 
 ## CI 与 Action 固定版本
 
-`ci.yml` 执行类型、lint、格式、单元、生产构建、浏览器、a11y、子路径、隔离公开模式、链接及资源检查，保留短期合成测试证据。CI 结果以实际运行日志为准；此次没有在 GitHub runner 上执行。安装浏览器需要网络。
+`ci.yml` 配置类型、lint、格式、单元、生产构建、浏览器、a11y、子路径、隔离公开模式、链接及资源检查，保留短期合成测试证据。独立完整CI已在修订`61e9432`通过，21个步骤全部Success，见[实际运行记录](https://github.com/AnkeY1/jinquan-space/actions/runs/38704918528)。发布工作流也已在GitHub runner完成资料门禁、源码检查/格式/单元验证、公开构建和Pages部署；两者分别记录，不将一次成功延伸到后续修订。安装浏览器需要网络。
 
 2026-10-15 尝试对下列官方仓库运行 `git ls-remote`，直接访问 GitHub 443 连接失败或重置。因此通过官方 release 页面链接至完整 commit 页面核实以下 SHA；它们是选定的稳定发布，未宣称为所有仓库的最新 patch。更新时重新核对官方 release 和完整 SHA，同时重跑项目测试。
 
@@ -85,12 +87,13 @@ Remove-Item Env:SITE_MODE, Env:SITE_ORIGIN, Env:SITE_BASE
 
 ## 发布后实测表
 
-| 检查                                  | 此次状态 | 由站长或获授权人员补录             |
-| ------------------------------------- | -------- | ---------------------------------- |
-| 真实仓库 Pages 设置、environment 权限 | 未执行   | 仓库 / 修订 / 日期                 |
-| 域名与 DNS、HTTPS                     | 未执行   | 域名 / 解析 / 证书                 |
-| 境内固定网络、移动网络                | 未执行   | 地区、运营商、设备、时间、页面结果 |
-| 境外网络                              | 未执行   | 地区、网络、时间、页面结果         |
-| iOS / Android 真机                    | 未执行   | 系统、浏览器、工具与下载表现       |
+| 检查                            | 此次状态 | 由站长或获授权人员补录                              |
+| ------------------------------- | -------- | --------------------------------------------------- |
+| 真实仓库 Pages 设置、发布工作流 | 通过     | `AnkeY1/jinquan-space`；发布 #1 Success；2026-10-15 |
+| 默认 Pages 地址HTTPS访问        | 通过     | 无登录HTTPS请求40/40文件200；真实404正确            |
+| 自定义域名与 DNS                | 未配置   | 当前使用默认GitHub Pages域名                        |
+| 境内固定网络、移动网络          | 未执行   | 地区、运营商、设备、时间、页面结果                  |
+| 境外网络                        | 未执行   | 地区、网络、时间、页面结果                          |
+| iOS / Android 真机              | 未执行   | 系统、浏览器、工具与下载表现                        |
 
 本地桌面模拟视口不能代替上述网络或真机测试，也不保证搜索引擎收录。
