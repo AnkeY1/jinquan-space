@@ -1,6 +1,6 @@
 name: Publish approved site to GitHub Pages
 
-# Publishing is always an explicit human action; pushes and CI never trigger it.
+# Temporary v1.1.0 source bootstrap; restore the normal read-only workflow after publication.
 on:
   workflow_dispatch:
     inputs:
@@ -23,7 +23,7 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     permissions:
-      contents: read
+      contents: write
       pages: read
     env:
       SITE_MODE: public
@@ -32,10 +32,86 @@ jobs:
       PUBLISH_CONFIRMED: ${{ inputs.publish_confirmed }}
       ASTRO_TELEMETRY_DISABLED: '1'
     steps:
+      - name: Require explicit publication before repository changes
+        run: |
+          if [ "$PUBLISH_CONFIRMED" != 'true' ]; then
+            echo 'Publication was not confirmed.' >&2
+            exit 1
+          fi
       - name: Check out approved source
         uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
         with:
-          persist-credentials: false
+          persist-credentials: true
+      - name: Restore approved version 1.1.0 source archive
+        if: ${{ hashFiles('source-upload.zip') != '' }}
+        run: |
+          python3 <<'PY'
+          from pathlib import Path, PurePosixPath, PureWindowsPath
+          import json
+          import shutil
+          import stat
+          import zipfile
+
+          root = Path.cwd().resolve()
+          archive_path = root / 'source-upload.zip'
+          pending = []
+          members = {}
+          with zipfile.ZipFile(archive_path) as archive:
+              for entry in archive.infolist():
+                  name = entry.orig_filename
+                  path = PurePosixPath(name)
+                  if (
+                      not path.parts
+                      or path.is_absolute()
+                      or PureWindowsPath(name).drive
+                      or '\\' in name
+                      or '..' in path.parts
+                      or any(part.casefold() == '.git' for part in path.parts)
+                      or any(':' in part for part in path.parts)
+                      or any(ord(character) < 32 or ord(character) == 127 for character in name)
+                      or path.as_posix() == 'source-upload.zip'
+                  ):
+                      raise ValueError(f'Unsafe archive path: {name!r}')
+                  mode = entry.external_attr >> 16
+                  if stat.S_IFMT(mode) not in (0, stat.S_IFREG, stat.S_IFDIR):
+                      raise ValueError(f'Unsupported archive entry: {name!r}')
+                  target = root.joinpath(*path.parts)
+                  if not target.resolve().is_relative_to(root):
+                      raise ValueError(f'Archive path escapes checkout: {name!r}')
+                  if any(candidate.is_symlink() for candidate in [target, *target.parents] if candidate != root and candidate.is_relative_to(root)):
+                      raise ValueError(f'Archive path traverses an existing symlink: {name!r}')
+                  key = path.as_posix()
+                  if key in members:
+                      raise ValueError(f'Duplicate archive path: {name!r}')
+                  members[key] = entry
+                  if path.parts[:2] != ('.github', 'workflows'):
+                      pending.append((entry, target))
+              profile = json.loads(archive.read(members['src/data/profile.json']))
+              package = json.loads(archive.read(members['package.json']))
+              lock = json.loads(archive.read(members['package-lock.json']))
+              if profile.get('publicProfileApproved') is not True:
+                  raise ValueError('The archived public profile has not been approved.')
+              if package.get('name') != 'jinquan-space' or package.get('version') != '1.1.0':
+                  raise ValueError('The source archive must contain jinquan-space version 1.1.0.')
+              if lock.get('version') != '1.1.0' or lock.get('packages', {}).get('', {}).get('version') != '1.1.0':
+                  raise ValueError('The archived package lock must match version 1.1.0.')
+              for entry, target in pending:
+                  if entry.is_dir():
+                      target.mkdir(parents=True, exist_ok=True)
+                  else:
+                      target.parent.mkdir(parents=True, exist_ok=True)
+                      with archive.open(entry) as source, target.open('wb') as output:
+                          shutil.copyfileobj(source, output)
+          archive_path.unlink()
+          print(f'Restored {len(pending)} approved version 1.1.0 source entries; workflow files were preserved.')
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add --all -- . ':!.github/workflows/**'
+          if ! git diff --cached --quiet; then
+            git commit -m 'Update approved personal website to version 1.1.0'
+            git push origin "HEAD:${GITHUB_REF_NAME}"
+          fi
       - name: Set up Node.js
         uses: actions/setup-node@2028fbc5c25fe9cf00d9f06a71cc4710d4507903 # v6.0.0
         with:
