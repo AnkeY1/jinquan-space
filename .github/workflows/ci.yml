@@ -1,0 +1,73 @@
+name: Validate static site
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    env:
+      SITE_MODE: preview
+      SITE_BASE: /
+      SITE_ORIGIN: ''
+      ASTRO_TELEMETRY_DISABLED: '1'
+      CI: 'true'
+    steps:
+      - name: Check out source
+        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
+        with:
+          persist-credentials: false
+      - name: Set up Node.js
+        uses: actions/setup-node@2028fbc5c25fe9cf00d9f06a71cc4710d4507903 # v6.0.0
+        with:
+          node-version: 24.19.0
+          cache: npm
+      - name: Install locked dependencies
+        run: npm ci
+      - name: Install Chromium and system dependencies
+        run: npx playwright install --with-deps chromium
+      - name: Install Chinese screenshot fonts
+        run: sudo apt-get install -y fonts-noto-cjk
+      - name: Check types
+        run: npm run check
+      - name: Lint
+        run: npm run lint
+      - name: Check formatting
+        run: npm run format:check
+      - name: Test pure algorithms
+        run: npm run test:unit
+      - name: Build preview and inspect generated assets
+        run: npm run build
+      - name: Test browser journeys
+        run: npm run test:e2e -- tests/e2e
+      - name: Test automated accessibility
+        run: npm run test:a11y
+      - name: Test subpath deployment
+        run: npm run test:basepath
+      - name: Test isolated public build and approval gate
+        run: npm run test:public
+      - name: Check generated links
+        run: npm run test:links
+      - name: Check resource budgets
+        run: npm run test:bundle
+      - name: Preserve synthetic test evidence
+        if: always()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        with:
+          name: validation-evidence
+          path: |
+            test-results/
+            playwright-report/
+          if-no-files-found: ignore
+          retention-days: 7
