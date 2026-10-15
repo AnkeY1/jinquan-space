@@ -1,6 +1,6 @@
 # 喻锦权 / Space
 
-一个可以静态部署的中文个人技术空间：19 个页面、3 个本站演示项目、3 篇功能说明文章、日志时间差分析器、CSV/TSV 数据绘图器和信号实验室。默认预览模式，个人公开资料尚未批准；没有推送、创建公开仓库或发布。
+一个可以静态部署的中文个人技术空间：19 个页面、3 个本站演示项目、3 篇功能说明文章、日志时间差分析器、CSV/TSV 数据绘图器和信号实验室。当前版本已获站长授权并发布至 [喻锦权 / Space](https://ankey1.github.io/jinquan-space/)。[首次部署](https://github.com/AnkeY1/jinquan-space/actions/runs/38704126532)与[完整 CI](https://github.com/AnkeY1/jinquan-space/actions/runs/38704918528)均已通过。
 
 ## 本地运行
 
@@ -61,9 +61,9 @@ Astro 7 静态多页、TypeScript strict、原生 CSS、按页 ECharts、Papa Pa
 
 ## 发布与迁移
 
-默认 `SITE_MODE=preview`，所有 HTML 都是 noindex，预览不生成 sitemap。`.env.example` 提供 origin/base 设置。公开构建同时需要真实 HTTPS origin 和站长确认后的 `publicProfileApproved=true`，当前保持 false。**noindex 不是权限控制。**
+本地默认 `SITE_MODE=preview`，预览 HTML 使用 noindex，预览不生成 sitemap。`.env.example` 提供 origin/base 设置。公开构建同时需要真实 HTTPS origin 和站长确认后的 `publicProfileApproved=true`，该字段已按本次授权设置为 true。本站正式配置是 `SITE_ORIGIN=https://ankey1.github.io`、`SITE_BASE=/jinquan-space/`。**noindex 不是权限控制。**
 
-CI 不发布；GitHub Pages 工作流只能手动触发。账号、仓库、公开资料与发布目标需要站长确认后配置。详见 [部署](docs/DEPLOYMENT.md) 与 [迁移](docs/MIGRATION.md)。
+CI 不发布；GitHub Pages 工作流只能手动触发。当前仓库为 [AnkeY1/jinquan-space](https://github.com/AnkeY1/jinquan-space)，Pages 使用 GitHub Actions 和默认 HTTPS 域名。后续公开版本仍需明确发布授权。详见 [部署](docs/DEPLOYMENT.md) 与 [迁移](docs/MIGRATION.md)。
 
 ## 交付证据与许可
 
