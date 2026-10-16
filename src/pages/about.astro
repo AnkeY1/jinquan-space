@@ -33,6 +33,19 @@ const chapters = [
         <span class="eyebrow">HELLO / A LITTLE ABOUT ME</span>
         <h1>你好，我是{profile.displayName}。</h1>
         <p class="hero-intro">{profile.about}</p>
+        <div class="hero-personal">
+          <div class="tag-list" aria-label="我的爱好">
+            {profile.hobbies.map((hobby) => (
+              <span class="tag">{hobby}</span>
+            ))}
+          </div>
+          {profile.wechatId && (
+            <p class="hero-wechat">
+              <span>微信</span>
+              <code>{profile.wechatId}</code>
+            </p>
+          )}
+        </div>
         <div class="tag-list" aria-label="我的研究与技术方向">
           {profile.directions.map((direction) => (
             <span class="tag">{direction}</span>
@@ -44,8 +57,8 @@ const chapters = [
       </div>
       <figure class="hero-figure">
         <Image
-          src={fieldTest}
-          alt="带着自研解调仪外出测试时，在中天门口的留影"
+          src={portrait}
+          alt="喻锦权的个人形象照"
           layout="constrained"
           format="webp"
           width={720}
@@ -53,7 +66,7 @@ const chapters = [
           loading="eager"
           fetchpriority="high"
         />
-        <figcaption>把自己做的仪表带到现场，也把新的问题带回实验室。</figcaption>
+        <figcaption>健身，也是日常的一部分。</figcaption>
       </figure>
     </header>
 
@@ -239,9 +252,21 @@ const chapters = [
             出差前，我会按任务需求研制仪表或补充相应功能；出差时，我主要负责仪表运行、数据采集和分析。现场其他专业环节由同行伙伴协作完成，彼此配合。
           </p>
           <p>
-            我曾带着自研解调仪去中天，采集和分析光栅光纤封装成缆后的光栅位置与反射信号。页首那张照片，就是外出测试时在门口留下的纪念。现场总会遇到桌面调试之外的细节，譬如：
+            我曾带着自研解调仪去中天，采集和分析光栅光纤封装成缆后的光栅位置与反射信号。现场总会遇到桌面调试之外的细节，譬如：
             <strong>铠装光缆是真的难剥。</strong>
           </p>
+          <figure class="story-photo field-test-photo">
+            <Image
+              src={fieldTest}
+              alt="带着自研解调仪外出测试时，在中天门口的留影"
+              layout="constrained"
+              format="webp"
+              width={1440}
+              sizes="(max-width: 760px) calc(100vw - 40px), 760px"
+              loading="lazy"
+            />
+            <figcaption>带着自研解调仪去中天测试，在门口留下的纪念。</figcaption>
+          </figure>
           <p>
             我也带着自己做的仪表，和水听组一起去了青岛海试。傍晚在海边围着设备一起调试，是这段经历里留在照片中的一个瞬间。
           </p>
@@ -364,11 +389,6 @@ const chapters = [
         <p>
           我喜欢打篮球、弹钢琴、健身，也会和朋友一起打游戏。这些爱好让生活有了不同的节奏；和队友、朋友、实验室学弟们相处的日子，也都是我很珍惜的部分。
         </p>
-        <div class="tag-list hobby-list" aria-label="我的爱好">
-          {profile.hobbies.map((hobby) => (
-            <span class="tag">{hobby}</span>
-          ))}
-        </div>
         <div class="life-photos">
           <figure class="story-photo basketball-photo">
             <Image
@@ -377,22 +397,10 @@ const chapters = [
               layout="constrained"
               format="webp"
               width={1200}
-              sizes="(max-width: 760px) calc(100vw - 40px), 480px"
+              sizes="(max-width: 760px) calc(100vw - 40px), 780px"
               loading="lazy"
             />
             <figcaption>和朋友们一起打球的日子。</figcaption>
-          </figure>
-          <figure class="story-photo portrait-photo">
-            <Image
-              src={portrait}
-              alt="健身房里的个人生活照"
-              layout="constrained"
-              format="webp"
-              width={640}
-              sizes="(max-width: 760px) 280px, 270px"
-              loading="lazy"
-            />
-            <figcaption>健身，也是日常的一部分。</figcaption>
           </figure>
         </div>
       </div>
@@ -458,6 +466,28 @@ const chapters = [
   .hero-contact {
     margin-top: 26px;
   }
+  .hero-personal {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px 22px;
+    margin-bottom: 20px;
+  }
+  .hero-wechat {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin: 0;
+  }
+  .hero-wechat span {
+    color: var(--muted);
+    font-size: 12px;
+  }
+  .hero-wechat code {
+    color: var(--text);
+    font-size: 17px;
+    user-select: text;
+  }
   figure {
     margin: 0;
   }
@@ -470,7 +500,7 @@ const chapters = [
     height: auto;
     aspect-ratio: 4 / 5;
     object-fit: cover;
-    object-position: 45% 50%;
+    object-position: 50% 35%;
     border-radius: 10px;
   }
   figcaption {
@@ -647,8 +677,8 @@ const chapters = [
   .field-story p:last-child {
     margin-bottom: 0;
   }
-  .hobby-list {
-    margin-top: 21px;
+  .field-test-photo {
+    margin-bottom: 26px;
   }
   .record-details {
     margin-top: 27px;
@@ -699,13 +729,7 @@ const chapters = [
     align-items: start;
   }
   .life-photos {
-    display: grid;
-    grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
-    gap: 24px;
-    align-items: start;
-  }
-  .portrait-photo {
-    margin-top: 83px;
+    display: block;
   }
   .contact-section {
     margin-left: 186px;
@@ -765,11 +789,13 @@ const chapters = [
       font-size: 15px;
     }
     .hero-figure {
-      max-width: 520px;
+      width: 100%;
+      max-width: 380px;
+      margin-inline: auto;
     }
     .hero-figure img {
-      aspect-ratio: 3 / 2;
-      object-position: center;
+      aspect-ratio: 4 / 5;
+      object-position: 50% 35%;
     }
     .chapter-nav {
       padding: 20px 0;
@@ -809,16 +835,10 @@ const chapters = [
     .field-story p {
       font-size: 14px;
     }
-    .life-photos,
     .field-photos,
     .instrument-photos {
       grid-template-columns: 1fr;
       gap: 0;
-    }
-    .portrait-photo {
-      width: min(75%, 280px);
-      margin-top: 25px;
-      margin-left: auto;
     }
     .contact-section {
       margin-left: 0;

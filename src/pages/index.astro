@@ -1,7 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import { Image } from 'astro:assets';
-import fieldTest from '../assets/about/field-test.webp';
+import portrait from '../assets/about/portrait.webp';
 import Icon from '../components/Icon.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import ArticleRow from '../components/ArticleRow.astro';
@@ -162,7 +162,13 @@ const wave = Array.from(
       </div>
     </section>
     <section class="about-strip">
-      <Image src={fieldTest} alt="" width={180} format="webp" class="about-portrait" />
+      <Image
+        src={portrait}
+        alt="喻锦权的个人形象照"
+        width={180}
+        format="webp"
+        class="about-portrait"
+      />
       <div class="about-strip-copy">
         <span class="section-number">A LITTLE ABOUT ME</span>
         <h2>保持好奇，把事情弄明白。</h2>
@@ -459,7 +465,7 @@ const wave = Array.from(
     width: 68px;
     height: 82px;
     object-fit: cover;
-    object-position: 47% center;
+    object-position: 50% 35%;
     border: 1px solid var(--border);
     border-radius: 7px;
   }
